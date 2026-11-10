@@ -1,6 +1,6 @@
 # Architecture diagrams in Mermaid (architecture-beta)
 
-Mermaid versions of [fig-01-architecture.drawio](fig-01-architecture.drawio). They use the `architecture-beta` diagram type, so they need Mermaid 11.1 or later; GitHub and recent VS Code previews render it.
+Mermaid versions of [architecture.drawio](architecture.drawio). They use the `architecture-beta` diagram type, so they need Mermaid 11.1 or later; GitHub and recent VS Code previews render it.
 
 Limits of `architecture-beta`: edges carry no text labels, and a service can sit in only one group, so the Auto Scaling group (ASG) and the security groups are shown in the service names and in the tables below instead of as boxes.
 

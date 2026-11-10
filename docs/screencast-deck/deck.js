@@ -92,6 +92,78 @@ document.addEventListener("focusin", bigShortCode);
     });
 })();
 
+// Full screen for a diagram or a chart: click a Mermaid diagram, or the full-screen icon in a chart's toolbar
+// (charts.js). The cross, Esc, or a click beside it closes it. fill(body) puts the content in and may return
+// a function that tidies up when it closes (a chart disposes of itself).
+window.deckEnlarge = (function () {
+    let shade, body, caption, tidy = null;
+    function close() {
+        if (!shade || shade.hidden) return;
+        shade.hidden = true;
+        if (tidy) tidy();
+        tidy = null;
+        body.replaceChildren();
+    }
+    function build() {
+        if (shade) return;
+        shade = document.createElement("div");
+        shade.className = "deck-enlarge";
+        shade.setAttribute("data-no-click", "");
+        shade.setAttribute("role", "dialog");
+        shade.setAttribute("aria-modal", "true");
+        shade.hidden = true;
+        body = document.createElement("div");
+        body.className = "enlarge-body";
+        caption = document.createElement("p");
+        caption.className = "enlarge-caption";
+        const cross = document.createElement("button");
+        cross.type = "button";
+        cross.className = "enlarge-close";
+        cross.textContent = "×";
+        cross.title = cross.ariaLabel = "Close (Esc)";
+        const inner = document.createElement("div");
+        inner.append(body, caption);
+        shade.append(inner, cross);
+        document.body.appendChild(shade);
+        shade.addEventListener("click", event => {
+            if (event.target === shade || event.target === cross || event.target === inner) close();
+            event.stopPropagation();
+        });
+        window.addEventListener("keydown", event => {
+            if (shade.hidden) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            if (event.key === "Escape") close();
+        }, true);
+    }
+    return function open(fill, text) {
+        build();
+        close();
+        caption.textContent = text || "";
+        shade.hidden = false;
+        tidy = fill(body) || null;
+        shade.querySelector(".enlarge-close").focus();
+    };
+})();
+
+// A click on a Mermaid diagram shows it full screen (a copy of its picture)
+window.addEventListener("click", event => {
+    const diagram = event.button === 0 && event.target.closest?.(".reveal .slides .mermaid[data-processed]");
+    if (!diagram || /print-pdf/.test(location.search) || document.body.classList.contains("arj-drawing")) return;
+    const svg = diagram.querySelector("svg");
+    if (!svg) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const caption = diagram.closest("section")?.querySelector(".fig-caption");
+    window.deckEnlarge(body => {
+        const copy = svg.cloneNode(true);
+        copy.removeAttribute("width");
+        copy.removeAttribute("height");
+        copy.style.maxWidth = "100%";
+        body.appendChild(copy);
+    }, caption ? caption.textContent.replace(/\s+/g, " ").trim() : "");
+}, true);
+
 // A Mermaid timeline draws boxes of different heights in a row, leaves wide gaps between the rows, and runs
 // its dashed lines far below the last event: the picture is tall, so fitted to the slide it is narrow and
 // its text small. Lay the three rows out again: in each row every box the same height, its text centred;
@@ -212,6 +284,7 @@ Reveal.on("ready", async () => {
             const { svg } = await mermaid.render(`deck-mermaid-${n++}`, decode.value.trim());
             el.innerHTML = /^\s*timeline\b/m.test(decode.value) ? trimTimeline(svg) : svg;
             el.setAttribute("data-processed", "true");
+            el.setAttribute("data-no-click", "");  // ARJ: a click here shows the diagram full screen, not the next slide
         }
         Reveal.layout();
     } catch (error) { console.error("Mermaid could not render", error); }

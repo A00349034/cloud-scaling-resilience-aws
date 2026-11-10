@@ -1,7 +1,8 @@
 // Interactive charts for slides 03, 04.1 and 05, drawn with Apache ECharts from data/ca1-charts.json
 // (written by scripts/ca1_chart_data.py from the saved test results: the same numbers as the report's PNG charts).
 // A chart draws itself, left to right, every time its slide is shown. Hover for values; drag or scroll inside
-// a chart to zoom in on time; the small icons at its top right zoom, restore, or save a picture.
+// a chart to zoom in on time; the small icons at its top right zoom, restore, save a picture, or show the chart
+// full screen. A chart is marked data-no-click, so ARJ leaves its clicks and wheel alone (they would change slides).
 // In a slide: <div class="echart" data-chart="oneVsTwo|elasticity|failure"></div>
 (() => {
     const C = {
@@ -145,14 +146,43 @@
 
     const builders = { oneVsTwo, elasticity, failure };
 
+    // The chart's option, with a full-screen icon added to its toolbar (deck.js draws the full-screen view)
+    function option(el, full) {
+        const o = builders[el.dataset.chart](data[el.dataset.chart]);
+        if (o.toolbox.show && !full && window.deckEnlarge) {
+            o.toolbox.feature.myFull = {
+                title: "Full screen", onclick: () => enlarge(el),
+                icon: "path://M3 3h7v2H5v5H3zM14 3h7v7h-2V5h-5zM3 14h2v5h5v2H3zM19 14h2v7h-7v-2h5z"
+            };
+        }
+        return o;
+    }
+
+    function enlarge(el) {
+        const caption = el.closest("section")?.querySelector(".fig-caption");
+        window.deckEnlarge(body => {
+            const box = document.createElement("div");
+            box.className = "enlarge-chart";
+            body.appendChild(box);
+            const big = echarts.init(box, null, { renderer: "svg" });
+            big.setOption(option(el, true));
+            big.on("restore", () => setTimeout(() => { big.clear(); big.setOption(option(el, true)); }));
+            return () => big.dispose();
+        }, caption ? caption.textContent.replace(/\s+/g, " ").trim() : el.getAttribute("aria-label"));
+    }
+
     function draw(el) {
         let chart = charts.get(el);
         if (!chart) {
+            el.setAttribute("data-no-click", "");  // ARJ: a click or wheel here is for the chart, not the next slide
             chart = echarts.init(el, null, { renderer: "svg" });
             charts.set(el, chart);
+            // Restore: ECharts keeps the option it was first given, and chart.clear() below empties that,
+            // so its own restore left a blank chart. Draw the chart again instead.
+            chart.on("restore", () => setTimeout(() => draw(el)));
         }
         chart.clear();  // so the lines draw again from the left each time the slide is shown
-        chart.setOption(builders[el.dataset.chart](data[el.dataset.chart]));
+        chart.setOption(option(el));
     }
 
     async function start() {

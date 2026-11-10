@@ -150,8 +150,10 @@ flowchart LR
 
 <div class="echart chart-short" data-chart="oneVsTwo" role="img" aria-label="Requests per second and client p95 against virtual users, one and two Product instances"></div>
 
+<div class="fig-meta">
 <p class="fig-caption"><a class="ref media" href="#/figures"><sup>3</sup></a> – <a href="http://localhost:9090/productapi/products">List products</a> (<code>GET /productapi/products</code>) from the laptop, 20 products, 10 to 400 users, 1 minute each</p>
-<p class="fig-data"><a class="data-link" href="#/data" data-set="one-vs-two">Dataset 1</a>, <span class="csv-name">one-vs-two.csv</span></p>
+<p class="fig-data"><a class="data-link" href="#/data" data-set="one-vs-two" title="Dataset 1: the numbers behind this figure">1</a> – <span class="csv-name">one-vs-two.csv</span></p>
+</div>
 
 ---
 
@@ -174,8 +176,10 @@ timeline
     19∶24∶32 : ⏹️ Load ends
 </div>
 
+<div class="fig-meta">
 <p class="fig-caption"><a class="ref media" href="#/figures"><sup>4</sup></a> – Elasticity events (UTC): 200 users, CPU target 30%<a class="ref" href="#/references"><sup>2</sup></a>, min 1, max 2</p>
-<p class="fig-data"><a class="data-link" href="#/data" data-set="elasticity-events">Dataset 2</a>, <span class="csv-name">elasticity-events.csv</span></p>
+<p class="fig-data"><a class="data-link" href="#/data" data-set="elasticity-events" title="Dataset 2: the numbers behind this figure">2</a> – <span class="csv-name">elasticity-events.csv</span></p>
+</div>
 
 - **Almost 6 minutes** from the load to useful capacity: 4m 19s waiting for the alarm, 1m 31s for the new instance to start
 - The server got faster; the client gained only 7%
@@ -189,8 +193,10 @@ timeline
 
 <div class="echart chart-tall" data-chart="elasticity" role="img" aria-label="Product CPU, load balancer response time, capacity and database CPU during the elasticity run"></div>
 
+<div class="fig-meta">
 <p class="fig-caption"><a class="ref media" href="#/figures"><sup>5</sup></a> – 1-minute data from <a href="https://aws.amazon.com/cloudwatch/">Amazon CloudWatch</a>, the AWS monitoring service</p>
-<p class="fig-data"><a class="data-link" href="#/data" data-set="elasticity-cloudwatch">Dataset 3</a>, <span class="csv-name">elasticity-cloudwatch.csv</span></p>
+<p class="fig-data"><a class="data-link" href="#/data" data-set="elasticity-cloudwatch" title="Dataset 3: the numbers behind this figure">3</a> – <span class="csv-name">elasticity-cloudwatch.csv</span></p>
+</div>
 
 ---
 
@@ -201,8 +207,10 @@ timeline
 
 <div class="echart chart-short" data-chart="failure" role="img" aria-label="Client requests per second, failed requests and p95 around the failure"></div>
 
+<div class="fig-meta">
 <p class="fig-caption"><a class="ref media" href="#/figures"><sup>6</sup></a> – 100 users, 2 instances, one terminated at 18:59:20. k6 requests in 5-second windows</p>
-<p class="fig-data"><a class="data-link" href="#/data" data-set="failure-client-5s">Dataset 4</a>, <span class="csv-name">failure-client-5s.csv</span></p>
+<p class="fig-data"><a class="data-link" href="#/data" data-set="failure-client-5s" title="Dataset 4: the numbers behind this figure">4</a> – <span class="csv-name">failure-client-5s.csv</span></p>
+</div>
 
 - **In the first 10 seconds, there were 4,180 failed requests.** Normal on one instance after about 30 seconds<a class="ref" href="#/references"><sup>1</sup></a>
 - **Replacement healthy after 6m 53s:** its CPU was held at 10% by standard CPU credits<a class="ref" href="#/references"><sup>3</sup></a>
@@ -228,8 +236,10 @@ timeline
     19∶06∶13 : ✅ Replacement healthy, 6m 53s
 </div>
 
+<div class="fig-meta">
 <p class="fig-caption"><a class="ref media" href="#/figures"><sup>7</sup></a> – Failure events (UTC): the client recovered in seconds, full capacity took almost 7 minutes</p>
-<p class="fig-data"><a class="data-link" href="#/data" data-set="failure-events">Dataset 5</a>, <span class="csv-name">failure-events.csv</span></p>
+<p class="fig-data"><a class="data-link" href="#/data" data-set="failure-events" title="Dataset 5: the numbers behind this figure">5</a> – <span class="csv-name">failure-events.csv</span></p>
+</div>
 
 ---
 
@@ -332,13 +342,13 @@ flowchart LR
 <!-- .slide: id="data" -->
 
 <table class="data-sets no-link-icon">
-<thead><tr><th>Dataset</th><th>File and description</th><th class="num">Rows</th><th>Figure</th><th>Open</th></tr></thead>
+<thead><tr><th>Dataset</th><th>File</th><th>Description</th><th class="num">Data rows</th><th>Figure</th><th><span class="sr-only">View</span></th><th><span class="sr-only">Download</span></th></tr></thead>
 <tbody>
-<tr data-set="one-vs-two"><td class="set-no">Dataset 1</td><td><span class="csv-name">one-vs-two.csv</span><br><span class="set-desc">One Product instance versus two: requests per second and client p95 by users</span></td><td class="num">12</td><td><a class="fig-link" href="#/one-vs-two">3</a></td><td class="set-actions"><a class="md-view" href="../../data/markdown/one-vs-two.md">View</a> <a class="csv-download" href="../../data/csv/one-vs-two.csv" download>Download</a></td></tr>
-<tr data-set="elasticity-events"><td class="set-no">Dataset 2</td><td><span class="csv-name">elasticity-events.csv</span><br><span class="set-desc">Elasticity: the events in order</span></td><td class="num">6</td><td><a class="fig-link" href="#/elasticity">4</a></td><td class="set-actions"><a class="md-view" href="../../data/markdown/elasticity-events.md">View</a> <a class="csv-download" href="../../data/csv/elasticity-events.csv" download>Download</a></td></tr>
-<tr data-set="elasticity-cloudwatch"><td class="set-no">Dataset 3</td><td><span class="csv-name">elasticity-cloudwatch.csv</span><br><span class="set-desc">Elasticity: CloudWatch, 1-minute points</span></td><td class="num">134</td><td><a class="fig-link" href="#/elasticity-cloudwatch">5</a></td><td class="set-actions"><a class="md-view" href="../../data/markdown/elasticity-cloudwatch.md">View</a> <a class="csv-download" href="../../data/csv/elasticity-cloudwatch.csv" download>Download</a></td></tr>
-<tr data-set="failure-client-5s"><td class="set-no">Dataset 4</td><td><span class="csv-name">failure-client-5s.csv</span><br><span class="set-desc">Failure: k6 requests in 5-second windows</span></td><td class="num">72</td><td><a class="fig-link" href="#/failure">6</a></td><td class="set-actions"><a class="md-view" href="../../data/markdown/failure-client-5s.md">View</a> <a class="csv-download" href="../../data/csv/failure-client-5s.csv" download>Download</a></td></tr>
-<tr data-set="failure-events"><td class="set-no">Dataset 5</td><td><span class="csv-name">failure-events.csv</span><br><span class="set-desc">Failure: the events in order</span></td><td class="num">6</td><td><a class="fig-link" href="#/failure-events">7</a></td><td class="set-actions"><a class="md-view" href="../../data/markdown/failure-events.md">View</a> <a class="csv-download" href="../../data/csv/failure-events.csv" download>Download</a></td></tr>
+<tr data-set="one-vs-two"><td class="set-no">1</td><td><span class="csv-name">one-vs-two.csv</span></td><td class="set-desc">One Product instance versus two: requests per second and client p95 by users</td><td class="num">12</td><td><a class="fig-link" href="#/one-vs-two">3</a></td><td class="view"><a class="md-view" href="../../data/markdown/one-vs-two.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/one-vs-two.csv" download>Download</a></td></tr>
+<tr data-set="elasticity-events"><td class="set-no">2</td><td><span class="csv-name">elasticity-events.csv</span></td><td class="set-desc">Elasticity: the events in order</td><td class="num">6</td><td><a class="fig-link" href="#/elasticity">4</a></td><td class="view"><a class="md-view" href="../../data/markdown/elasticity-events.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/elasticity-events.csv" download>Download</a></td></tr>
+<tr data-set="elasticity-cloudwatch"><td class="set-no">3</td><td><span class="csv-name">elasticity-cloudwatch.csv</span></td><td class="set-desc">Elasticity: CloudWatch, 1-minute points</td><td class="num">134</td><td><a class="fig-link" href="#/elasticity-cloudwatch">5</a></td><td class="view"><a class="md-view" href="../../data/markdown/elasticity-cloudwatch.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/elasticity-cloudwatch.csv" download>Download</a></td></tr>
+<tr data-set="failure-client-5s"><td class="set-no">4</td><td><span class="csv-name">failure-client-5s.csv</span></td><td class="set-desc">Failure: k6 requests in 5-second windows</td><td class="num">72</td><td><a class="fig-link" href="#/failure">6</a></td><td class="view"><a class="md-view" href="../../data/markdown/failure-client-5s.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/failure-client-5s.csv" download>Download</a></td></tr>
+<tr data-set="failure-events"><td class="set-no">5</td><td><span class="csv-name">failure-events.csv</span></td><td class="set-desc">Failure: the events in order</td><td class="num">6</td><td><a class="fig-link" href="#/failure-events">7</a></td><td class="view"><a class="md-view" href="../../data/markdown/failure-events.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/failure-events.csv" download>Download</a></td></tr>
 </tbody>
 </table>
 
@@ -352,20 +362,26 @@ flowchart LR
 <!-- .slide: id="software" -->
 
 <div class="software-list">
+<div class="col">
 <div><h3 class="ic-application-brackets-outline">Applications</h3>
-<ul><li><a href="https://www.docker.com/">Docker</a></li><li><a href="https://aws.amazon.com/corretto/">Java 17 (Amazon Corretto)</a></li><li><a href="https://spring.io/projects/spring-boot">Spring Boot 4.1</a></li></ul></div>
+<ul><li><a href="https://aws.amazon.com/cli/">AWS CLI v2</a></li><li><a href="https://www.docker.com/">Docker</a></li><li><a href="https://aws.amazon.com/corretto/">Java 17 (Amazon Corretto)</a></li><li><a href="https://spring.io/projects/spring-boot">Spring Boot 4.1</a></li></ul></div>
 <div><h3 class="ic-aws">AWS</h3>
-<ul><li><a href="https://aws.amazon.com/elasticloadbalancing/application-load-balancer/">Application Load Balancer</a></li><li><a href="https://aws.amazon.com/cli/">AWS CLI v2</a></li><li><a href="https://aws.amazon.com/cloudwatch/">CloudWatch</a></li><li><a href="https://aws.amazon.com/ec2/">EC2</a></li><li><a href="https://aws.amazon.com/ec2/autoscaling/">EC2 Auto Scaling</a></li><li><a href="https://aws.amazon.com/rds/mysql/">RDS for MySQL</a></li><li><a href="https://aws.amazon.com/systems-manager/">Systems Manager</a></li></ul></div>
+<ul><li><a href="https://aws.amazon.com/elasticloadbalancing/application-load-balancer/">Application Load Balancer</a></li><li><a href="https://aws.amazon.com/cloudwatch/">CloudWatch</a></li><li><a href="https://aws.amazon.com/ec2/">EC2</a></li><li><a href="https://aws.amazon.com/ec2/autoscaling/">EC2 Auto Scaling</a></li><li><a href="https://aws.amazon.com/rds/mysql/">RDS for MySQL</a></li><li><a href="https://aws.amazon.com/systems-manager/">Systems Manager</a></li></ul></div>
+</div>
+<div class="col">
 <div><h3 class="ic-chart-box-outline">Data and charts</h3>
 <ul><li><a href="https://jupyter.org/">Jupyter</a></li><li><a href="https://matplotlib.org/">matplotlib</a></li><li><a href="https://pandas.pydata.org/">pandas</a></li><li><a href="https://www.python.org/">Python</a></li></ul></div>
 <div><h3 class="ic-sitemap-outline">Diagrams and slides</h3>
 <ul><li><a href="https://echarts.apache.org/">Apache ECharts 5.5</a></li><li><a href="https://www.npmjs.com/package/apocalypse-reveal-js">ARJ 1.8</a></li><li><a href="https://mermaid.js.org/">Mermaid 12.3</a></li><li><a href="https://revealjs.com/">Reveal.js 5.1</a></li></ul></div>
+</div>
+<div class="col">
 <div><h3 class="ic-speedometer">Load testing</h3>
 <ul><li><a href="https://grafana.com/oss/k6/">Grafana k6</a></li></ul></div>
 <div><h3 class="ic-script-text-outline">Scripts</h3>
 <ul><li><a href="https://learn.microsoft.com/powershell/">PowerShell 7</a></li></ul></div>
 <div><h3 class="ic-video-outline">Video</h3>
 <ul><li><a href="https://ffmpeg.org/">ffmpeg</a></li><li><a href="https://pptr.dev/">Puppeteer</a></li><li><a href="https://www.python.org/">Python</a></li></ul></div>
+</div>
 </div>
 
 ---<!--L2-->
@@ -381,7 +397,10 @@ flowchart LR
 
 ---
 
+<div class="exit-card"><div class="exit-rings"><img src="src/img/logo/mc-logo-circle.png" alt="" /></div></div>
+
 ## That's all, folks❗
+<!-- .element: class="exit-words" -->
 <!-- no-number -->
 <!-- .slide: id="exit" class="exit-slide" -->
 

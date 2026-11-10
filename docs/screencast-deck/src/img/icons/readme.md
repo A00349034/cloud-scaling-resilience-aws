@@ -30,3 +30,5 @@ From [Material Design Icons](https://pictogrammers.com/library/mdi/) (Apache 2.0
 | [table-large.svg](table-large.svg)                                   | Data sets: a data set (Material Design Icons)                                             |
 | [cellphone.svg](cellphone.svg)                                       | About the author: .NET MAUI, mobile apps (Material Design Icons; no open MAUI logo found) |
 | [big-data.svg](big-data.svg)                                         | About the author: Big Data (EOS Icons, MIT)                                               |
+| [file-csv.svg](file-csv.svg)                                         | Report: a CSV file (drawn for these slides, as in deck.css)                               |
+| [file-md.svg](file-md.svg)                                           | Report: a Markdown file (from ARJ, MIT)                                                   |
