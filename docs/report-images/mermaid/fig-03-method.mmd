@@ -1,0 +1,18 @@
+---
+config:
+  theme: default
+  themeVariables:
+    fontSize: 18px
+  flowchart:
+    wrappingWidth: 400
+    htmlLabels: true
+---
+flowchart LR
+  B["<b>1. Establish a baseline</b><br>one Product instance,<br>step load 10 to 400 users"]
+  C["<b>2. Change one variable</b><br>2 instances, automatic<br>scaling, or a failure"]
+  R["<b>3. Repeat the same test</b><br>same workload, data,<br>instance type and client"]
+  M["<b>4. Compare the results</b><br>a change of 20% or more,<br>or new errors"]
+  B --> C --> R --> M
+  M -. "next variable" .-> C
+  classDef step fill:#eef6fb,stroke:#3b6a99,stroke-width:2px,color:#10233f
+  class B,C,R,M step

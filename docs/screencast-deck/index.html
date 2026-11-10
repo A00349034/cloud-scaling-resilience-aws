@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>What changes when Product scales?</title>
+	<!-- About this page. Change the version (here and on the title slide in slides.md) with every change: see README.md -->
+	<meta name="author" content="Mark Crowe" />
+	<meta name="description" content="CA1: capacity, response time and recovery of the Product-Coupon application on AWS when the Product service scales." />
+	<meta name="keywords" content="AWS, scalability, resilience, Auto Scaling, Application Load Balancer, k6, reveal.js" />
+	<meta name="version" content="1.8.2" />
+	<meta name="generator" content="reveal.js 5.1.0, ARJ 1.8.15 (Apocalypse Reveal-js) and Mermaid 12.3, Apache ECharts 5.5" />
+	<link rel="schema.dc-terms" href="http://purl.org/dc/terms/" />
+	<meta name="dc-terms.creator" content="Mark Crowe" />
+	<meta name="dc-terms.created" content="2026-11-09" />
+	<meta name="dc-terms.modified" content="2026-11-10T05:00:00+00:00" />
+	<meta name="dc-terms.rights" content="© 2026 Mark Crowe" />
+	<link rel="icon" href="../favicon.ico" />
+	<link rel="author" href="https://github.com/A00349034" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" integrity="sha256-GqjoTJyry/5NlbGYef5IucLF5tVFdMvmebwi7bn+ErY=" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" integrity="sha256-nLxQgnl9k48O54Ayh5ChMa49e8XAnBdud5J8F08p5go=" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apocalypse-reveal-js@1.8.15/arj/css/arj.css" integrity="sha256-f1qbo8ChatDuQzLpbo5emr6bruCNcjXypUVXrYmjfxE=" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apocalypse-reveal-js@1.8.15/arj/css/deck-controls.css" integrity="sha256-3wAgAa+z4qA4JCAOwsp1vZq+PMK/C/jJApBvYEU6EtY=" crossorigin="anonymous">
+	<link rel="stylesheet" href="src/css/icons.css" />
+	<link rel="stylesheet" href="deck.css" />
+</head>
+
+<!--
+	Every slide comes from slides.md, so edit that file, not this one.
+	  ---   on its own line, blank lines round it: the next slide across
+	  --- followed straight away by an L2 comment: the next slide down, under the one before
+	Speaker notes come from speaking-script.md (python build_notes.py -> notes.js),
+	matched by a ".slide: data-note=n" comment on each slide.
+	The Markdown is fetched, so the deck needs a web server: in the repository folder run
+	python -m http.server 8011, then open http://localhost:8011/docs/screencast-deck/
+-->
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section data-markdown="slides.md"
+				data-separator="^\r?\n---\r?\n$"
+				data-separator-vertical="^\r?\n---&lt;!--L[23]--&gt;\r?\n$"
+				data-separator-notes="^Note:">
+			</section>
+		</div>
+	</div>
+
+	<script src="notes.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js" integrity="sha256-lza/PYkY45HowHyFxTdzgA1ABNwl+UiRbjGco3HKiBo=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js" integrity="sha256-KI/nyyf/aWo+HBN7IrDNEXOVqE26KnA+K/wxNuZWEqg=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js" integrity="sha256-2u8CTET+Y9JqwKQDzR4kQt09FcCkatJx7L0R/7gZchU=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/apocalypse-reveal-js@1.8.15/arj/js/deck-start.js" integrity="sha256-JvNhsm4WngBbWQvmOoQyW5byXelfojNi7O8/wG1mi5g=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" integrity="sha256-6EJwvQzVvfYP78JtAMKjkcsugfTSanqe4WGFpUdzo88=" crossorigin="anonymous"></script>
+	<script src="charts.js"></script>
+	<script src="deck.js"></script>
+</body>
+
+</html>

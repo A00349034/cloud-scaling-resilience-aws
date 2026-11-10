@@ -1,0 +1,444 @@
+:root{--bg:#101d31;--ink:#eef4fb;--muted:#b6c6d9;--accent:#67d8d0;--line:#445872}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}.reveal{font-family:Arial,sans-serif;color:var(--ink);font-size:27px}.reveal .slides{text-align:left}.reveal .slides>section{padding:25px 35px}h1,h2,h3,p{margin:0 0 22px}h1{font-size:72px;line-height:1.08;letter-spacing:-2px}h2{font-size:46px;line-height:1.12}h3{font-size:29px}p,li{line-height:1.4}ul{padding-left:28px}li{margin:12px 0}.eyebrow{text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-size:18px;margin-bottom:30px}.lead{font-size:33px;line-height:1.35;max-width:1020px}.byline{color:var(--muted);font-size:23px;margin-top:40px}.draft{color:var(--accent);font-size:20px;margin-top:34px}.caption{font-size:20px;line-height:1.35;color:var(--muted)}.callout{border-left:4px solid var(--accent);padding:12px 20px;margin-top:20px;font-size:25px}.two,.three{display:grid;gap:28px}.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr);margin:45px 0}.three>div{padding:24px;border:1px solid var(--line)}.three p{font-size:23px;color:var(--muted)}.number{font-size:54px;color:var(--accent);display:block;margin-bottom:18px}.architecture,.dependencies{display:flex;gap:25px;align-items:center;margin:35px 0}.dependencies{justify-content:flex-end;margin-top:10px}.node{border:1px solid var(--line);padding:20px 25px;text-align:center;font-size:26px;min-width:230px}.node.primary{border-color:var(--accent)}small{font-size:19px;color:var(--muted)}table{border-collapse:collapse;width:100%;font-size:25px;margin:20px 0 25px}th,td{text-align:left;padding:13px;border-bottom:1px solid var(--line)}th{font-size:20px;color:var(--accent)}.evidence{position:relative;border:2px dashed var(--line);margin:0;min-height:215px;display:flex;align-items:center;justify-content:center;background:#15263d;padding:18px;overflow:hidden}.evidence.wide{min-height:265px}.evidence img{display:none;width:100%;max-height:270px;object-fit:contain}.evidence.loaded{border-style:solid}.evidence.loaded img{display:block}.evidence.loaded figcaption{display:none}.evidence figcaption{font-size:21px;line-height:1.45;text-align:center;color:var(--muted)}code{font-size:17px;color:var(--accent)}.timeline{display:flex;justify-content:space-between;margin:22px 0;font-size:21px;color:var(--accent)}.timeline span+span:before{content:'→';margin-right:24px;color:var(--muted)}.rule{height:1px;background:var(--line);margin:45px 0}
+
+/* Deck-specific dark theme; the ARJ source files remain unchanged. */
+:root{--paper:#101d31;--ink:#eef4fb;--navy:#eef4fb;--navy-soft:#8de6e0;
+ --muted:#b6c6d9;--line:#445872;--gold:#67d8d0;--accent:#67d8d0}
+html,body,.reveal-viewport{background:var(--paper);color:var(--ink)}
+.reveal h1,.reveal h2,.reveal h3{color:var(--ink)}
+.reveal a{color:var(--accent)}
+.reveal table{background:transparent;color:var(--ink)}
+.reveal table th{color:var(--accent)}
+.reveal table th,.reveal table td{border-color:var(--line)}
+.reveal blockquote,.reveal pre,.reveal code{background:#15263d;color:var(--ink)}
+.reveal .slides section{padding-top:20px}
+.reveal .slides>section{padding-left:30px;padding-right:30px}
+.reveal h2{font-size:46px}
+.reveal .notes{display:none}
+@media print{html,body,.reveal-viewport{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+/* Keep the shared light-theme panels legible under the dark variables. */
+.reveal th{background:#20364f;color:var(--accent)}
+.reveal .controls{color:var(--accent)}
+.deck-search-box,.deck-sidebar{background:#15263d;color:var(--ink);border-color:var(--line)}
+.deck-search-box input{background:#101d31;color:var(--ink);border-color:var(--line)}
+.deck-sidebar-link.current,.deck-sidebar-link:hover{background:#25415f;color:var(--ink)}
+
+/* Plain Markdown slides: one image fills the width; two images on one line sit side by side. */
+.reveal .slides section p img{display:inline-block;max-width:96%;max-height:470px;margin:8px 0.5%;vertical-align:top;border:1px solid var(--line)}
+.reveal .slides section p:has(img + img) img{max-width:48%;max-height:360px}
+.reveal .slides section table{font-size:26px}
+
+/* Merged slides.md: figures, Mermaid diagram, answer cards. */
+.reveal .fig{margin:12px 0 0;text-align:center}
+.reveal .fig img{max-width:100%;max-height:310px;border:1px solid var(--line);margin:0}
+.reveal .mermaid{display:flex;justify-content:center;margin:30px 0 10px;visibility:hidden}
+.reveal .mermaid[data-processed]{visibility:visible}
+.reveal .mermaid svg{width:100%;max-width:100%!important;height:auto;max-height:400px}
+.reveal .timeline{justify-content:flex-start;gap:36px}
+.reveal .timeline span{text-align:center}
+.reveal .timeline small{font-size:19px}
+.reveal .three.answer{margin:30px 0}
+.reveal .three.answer p{font-size:24px;color:var(--ink)}
+.reveal .two .callout{margin-top:12px;font-size:23px}
+
+/*********************************************************
+ * Figures: the caption is text under the picture (never inside it),
+ * starting with a picture icon and its number on the Figures slide.
+ *********************************************************/
+.reveal .fig.big img{max-height:430px}
+.reveal .fig.full img{max-height:540px}
+.reveal .fig-caption{margin:8px 0 14px;text-align:center;font-size:20px;line-height:1.35;color:var(--muted)}
+.reveal .fig-caption + ul{margin-top:4px}
+.reveal .fig-caption + ul li{margin:6px 0;font-size:24px}
+.reveal .mermaid + .fig-caption{margin-top:0}
+
+/*********************************************************
+ * Footnote markers, as in the ASG2 and memes decks:
+ *   <a class="ref" ...><sup>4</sup></a>        reference: link icon, then 4
+ *   <a class="ref media" ...><sup>2</sup></a>  figure: picture icon, then 2
+ * Icons: Feather Icons (MIT), drawn in the link colour (--navy-soft).
+ *********************************************************/
+:root{
+ --icon-ref:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/%3E%3C/svg%3E");
+ --icon-media:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpolyline points='21 15 16 10 5 21'/%3E%3C/svg%3E");
+ --icon-external:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3Cpolyline points='15 3 21 3 21 9'/%3E%3Cline x1='10' y1='14' x2='21' y2='3'/%3E%3C/svg%3E")}
+.reveal .slides a{color:var(--navy-soft)}
+.reveal a.ref{font-family:Arial,Helvetica,sans-serif;font-size:0.8em;font-weight:bold;line-height:0;color:var(--navy-soft);text-decoration:none;white-space:nowrap;vertical-align:super}
+.reveal a.ref sup{font-size:1em;vertical-align:baseline;color:inherit}
+.reveal a.ref::before{content:"";display:inline-block;width:0.8em;height:0.8em;margin:0 0.06em 0 0.12em;vertical-align:-0.05em;background:currentColor;-webkit-mask:var(--icon-ref) center/contain no-repeat;mask:var(--icon-ref) center/contain no-repeat}
+.reveal a.ref.media{font-size:1em;font-weight:normal;vertical-align:baseline;margin-right:0.25em}
+.reveal a.ref.media::before{-webkit-mask-image:var(--icon-media);mask-image:var(--icon-media);width:1em;height:1em}
+
+/* References and Figures: numbered, two columns; web links end with an external-link icon */
+.reveal ol.reflist{margin:0;padding-left:1.6em;font-size:21px;line-height:1.3;columns:2;column-gap:40px}
+.reveal ol.reflist li{margin:0 0 0.55em;break-inside:avoid}
+.reveal ol.reflist a{color:var(--ink);text-decoration:none}
+.reveal ol.reflist a:hover,.reveal ol.reflist a:focus-visible{color:var(--navy-soft);text-decoration:underline}
+.reveal ol.reflist a[href^="http"]::after{content:"";display:inline-block;width:0.75em;height:0.75em;margin-left:0.3em;vertical-align:-0.05em;background:var(--navy-soft);-webkit-mask:var(--icon-external) center/contain no-repeat;mask:var(--icon-external) center/contain no-repeat}
+.reveal ol.reflist.media-list a::before{content:"";display:inline-block;width:1em;height:1em;margin-right:0.3em;vertical-align:-0.12em;background:var(--navy-soft);-webkit-mask:var(--icon-media) center/contain no-repeat;mask:var(--icon-media) center/contain no-repeat}
+.reveal ol.reflist small{color:var(--muted);font-size:0.85em}
+
+/* Title and about slides on the dark background */
+.reveal .title-slide .calendar a.date-link{color:var(--ink);text-decoration:none}
+.reveal .title-slide .calendar a.date-link:hover{color:var(--navy-soft);text-decoration:underline}
+.reveal .deck-qr img{background:#fff;border-radius:10px;padding:6px}
+.reveal .about-slide .author-name{font-size:44px;font-weight:bold;color:var(--ink);display:flex;align-items:center;gap:18px;margin:10px 0 26px}
+.reveal .about-slide .author-name img.inline-logo{width:84px;height:84px;border-radius:50%}
+.reveal .about-slide li{font-size:30px}
+.reveal img.logo,.reveal img.inline-logo{border:none!important}
+
+/* Fixes after the render check */
+.reveal .about-slide .author-name{display:block}
+.reveal .about-slide .author-name a{display:inline-flex;align-items:center;gap:18px;color:var(--ink);text-decoration:none}
+.reveal .about-slide .author-name a::after{display:none}
+.reveal .three{margin:24px 0 18px}
+.reveal .three>div{padding:16px 22px}
+.reveal .three .number{font-size:40px;margin-bottom:6px}
+.reveal .three h3{margin-bottom:10px}
+.reveal .three p{margin:0}
+/* GitHub's mark is black: draw it light on the dark slides (not file icons for links into a repository) */
+.reveal .arj-icon-github,
+.reveal a[href^="https://github.com/"]:not([href*="/blob/"]):not([href*="/tree/"])::before{filter:invert(1)}
+.reveal .exit-slide button[data-deck-exit]{color:var(--paper)}
+.reveal .exit-slide button[data-deck-exit] *{color:var(--paper)}
+/* Charts are drawn wide and dark for the slides (ca1-make-charts.ps1, --slide): fill the width, keep the caption on the slide */
+.reveal .fig.big img{max-height:345px;border-color:#25415f}
+.reveal .fig.full img{max-height:470px;border-color:#25415f}
+.reveal section:has(.fig.big) table{margin:6px 0 10px;font-size:23px}
+.reveal section:has(.fig.big) th,.reveal section:has(.fig.big) td{padding:7px 13px}
+.reveal .about-slide .author-name a{white-space:nowrap}
+
+/*********************************************************
+ * November 10 rework: interactive charts, timelines, icons, file links
+ *********************************************************/
+/* ECharts boxes (charts.js): sized in slide pixels, Reveal scales them with the slide */
+.reveal .echart{width:100%;margin:6px 0 0}
+.reveal .echart.chart-short{height:290px}
+.reveal .echart.chart-tall{height:468px}
+.reveal section#failure .echart.chart-short{height:350px}
+/* Mermaid timelines fill the width */
+.reveal section#elasticity .mermaid svg,.reveal section#failure-events .mermaid svg{max-height:330px}
+/* Limits: diagram left, icon list right */
+.reveal .two.limits{grid-template-columns:330px 1fr;align-items:center;gap:36px;margin-top:6px}
+.reveal .two.limits .mermaid{margin:0}
+.reveal .two.limits .mermaid svg{max-height:340px}
+.reveal ul.icon-list{list-style:none;padding:0;margin:0}
+.reveal ul.icon-list li{display:flex;gap:16px;align-items:flex-start;margin:0 0 18px;font-size:26px}
+.reveal ul.icon-list li::before{display:none}
+.reveal ul.icon-list img{width:42px;height:42px;flex:none;margin-top:2px;border:none}
+/* Answer cards: an icon above each heading */
+.reveal .three.answer .card-icon{width:56px;height:56px;display:block;margin:0 0 8px;border:none}
+/* Finish slide: questions by email */
+.reveal .finish-slide .finish-questions{display:flex;align-items:center;justify-content:center;gap:22px}
+.reveal .finish-slide .finish-icon{width:76px;height:76px;border:none}
+.reveal .finish-slide .finish-mail{text-align:center;font-size:34px;margin-top:-6px}
+/* Software used: two columns */
+.reveal ul.two-col{columns:2;column-gap:50px;font-size:25px}
+.reveal ul.two-col li{break-inside:avoid;margin:0 0 14px}
+/* Exit slide: everything centred */
+.reveal .exit-slide h1,.reveal .exit-slide .exit-now,.reveal .exit-slide .exit-note{text-align:center}
+.reveal .exit-slide h1{width:100%}
+/* Files and folders: their icon, in the normal font, not the code font */
+.reveal a:is([href*="/blob/"],[href*="/tree/"],[href*="/raw/"]),.reveal a:is([href*="/blob/"],[href*="/tree/"]) code{font-family:inherit!important;font-size:inherit!important;background:none!important}
+.reveal a[href*="/tree/"]::before,.reveal a.folder::before{background-image:var(--icon-folder)!important;filter:none!important}
+.reveal a:is([href*="/blob/"],[href*="/raw/"])::before{filter:none!important}
+.reveal a[href$=".pdf"]::before{background-image:url("src/img/favicons/pdf.svg")!important;filter:none!important}
+
+/*********************************************************
+ * November 10, second pass (Mark's notes)
+ *********************************************************/
+/* Title slide: three levels of text. Heading (left), question, description */
+.reveal .slides .arj-title h1{text-align:left}
+.reveal .arj-title .title-text h3{font-size:40px;margin-bottom:10px}
+.reveal .arj-title .title-desc{font-size:28px;color:var(--muted);text-align:center;margin:0 0 4px}
+.reveal .arj-title .byline{margin-top:0.6em}
+.reveal .arj-title .title-quote img.label-favicon{margin-right:0.3em;vertical-align:-0.12em}
+
+/* Contents slides: thumbnails on the deck's dark background, not white */
+.reveal .deck-thumb-frame{background:var(--paper);border-color:var(--line)}
+
+/* Method: an icon and the step number on each card, an arrow between cards */
+.reveal .three.steps{gap:44px}
+.reveal .three.steps>div{position:relative}
+.reveal .three.steps>div+div::before{content:"";position:absolute;left:-40px;top:50%;width:36px;height:36px;margin-top:-18px;background:url("src/img/icons/arrow-right-bold.svg") center/contain no-repeat}
+.reveal .three.steps .step-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 6px}
+.reveal .three.steps .card-icon{width:50px;height:50px;border:none;margin:0}
+.reveal .three.steps .number{margin:0}
+
+/* Finish slide: the heading is an h2, the question an h3 with the email icon */
+.reveal .finish-slide h2{text-align:center}
+.reveal .finish-slide h3.finish-questions{display:flex;align-items:center;justify-content:center;gap:20px;font-size:48px;margin:40px 0 10px}
+.reveal .finish-slide h3.finish-questions::before{content:"";width:64px;height:64px;background:url("src/img/icons/email-outline.svg") center/contain no-repeat}
+.reveal .finish-slide ul{margin-top:36px}
+
+/* The console screenshot: as wide as the slide, caption under it */
+.reveal figure.console-shot{margin:20px 0 6px;text-align:center}
+.reveal figure.console-shot img{max-width:100%;max-height:420px;border:1px solid var(--line)}
+
+/* Local files (a relative link, made a.file-link by deck.js): the file's type before the name, kept with it on one line */
+.reveal a.file-link{white-space:nowrap}
+.reveal a.file-link::before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-right:0.25em;vertical-align:-0.18em;background:var(--icon-link-plain) center/contain no-repeat}
+.reveal a.file-link[href$=".md"]::before{background-image:var(--icon-file-md)}
+.reveal a.file-link[href$=".py"]::before{background-image:var(--icon-file-py)}
+.reveal a.file-link[href$=".json"]::before{background-image:var(--icon-file-json)}
+.reveal a.file-link[href$=".js"]::before{background-image:var(--icon-file-js)}
+.reveal a.file-link[href$=".html"]::before{background-image:var(--icon-file-html)}
+.reveal a.file-link[href$=".txt"]::before{background-image:var(--icon-file-txt)}
+.reveal a.file-link[href$=".pdf"]::before{background-image:url("src/img/favicons/pdf.svg")}
+.reveal a.file-link[href$=".ipynb"]::before{background-image:url("src/img/favicons/jupyter.svg")}
+.reveal a.file-link:is(.folder,[href$="/"])::before{background-image:var(--icon-folder)}
+
+/* Software used: one link per product */
+.reveal ul.two-col.software{font-size:23px}
+.reveal ul.two-col.software a{white-space:nowrap}
+
+/* Exit slide: heading, button and note centred as a group in the middle of the slide.
+   Printed, only "That's all, folks!" */
+.reveal .slides>section.exit-slide{height:100%;display:flex!important;flex-direction:column;justify-content:center;align-items:center;padding-top:0!important}
+.reveal .exit-slide p.exit-now{margin:1em 0 0.6em}
+html.print-pdf .reveal .slides .pdf-page>section.exit-slide{height:var(--slide-height,720px)!important;display:flex!important}
+html.print-pdf .reveal .exit-slide :is(.exit-now,.exit-note){display:none!important}
+@media print{.reveal .exit-slide :is(.exit-now,.exit-note){display:none!important}}
+/* Icons that are dark on a dark slide: a light chip behind them */
+.reveal a:is([href*="learn.microsoft.com/powershell"],[href*="pandas.pydata.org"],[href*="ffmpeg.org"])::before{background-color:#eef4fb;border-radius:3px;padding:1px}
+/* Figures: room between the list and the note under it */
+.reveal ol.reflist + .caption{margin-top:26px}
+.reveal .arj-title .title-text h3{font-size:36px}
+.reveal section#failure-events .mermaid svg{max-height:400px}
+/* Printed exit page: the heading alone, in the middle of the page */
+html.print-pdf .reveal .exit-slide h1{margin-top:300px!important}
+
+/*********************************************************
+ * November 10, third pass. Icons belong to the style, not the HTML
+ * (as in the memes deck): a slide names the icon with a class, and
+ * the picture's path is only here.
+ *   <span class="arj-icon icon-tus"></span>     an icon in a line of text
+ *   <h3 class="ic-server">                    a card heading: the word, then its icon
+ *   <li class="ic-laptop">                    a list item: its icon first
+ *********************************************************/
+.reveal .icon-tus{background-image:url("src/img/favicons/tus.png")}
+.reveal .icon-mermaid{background-image:url("src/img/favicons/mermaid.svg")}
+.reveal .icon-echarts{background-image:url("src/img/favicons/echarts.png")}
+.reveal .ic-server{--ic:url("src/img/icons/server.svg")}
+.reveal .ic-scale-balance{--ic:url("src/img/icons/scale-balance.svg")}
+.reveal .ic-server-remove{--ic:url("src/img/icons/server-remove.svg")}
+.reveal .ic-chart-line{--ic:url("src/img/icons/chart-line.svg")}
+.reveal .ic-shield-refresh{--ic:url("src/img/icons/shield-refresh.svg")}
+.reveal .ic-lightbulb-on-outline{--ic:url("src/img/icons/lightbulb-on-outline.svg")}
+.reveal .ic-laptop{--ic:url("src/img/icons/laptop.svg")}
+.reveal .ic-database{--ic:url("src/img/icons/database.svg")}
+.reveal .ic-ticket-percent{--ic:url("src/img/icons/ticket-percent.svg")}
+.reveal .ic-timer-sand{--ic:url("src/img/icons/timer-sand.svg")}
+
+/* Card headings: number (method), word, icon, on one line */
+.reveal .three h3[class^="ic-"]{display:flex;align-items:center;gap:14px;margin:0 0 10px}
+.reveal .three h3[class^="ic-"]::after{content:"";flex:none;width:46px;height:46px;background:var(--ic) center/contain no-repeat}
+.reveal .three.steps h3 .number{display:inline;font-size:44px;line-height:1;margin:0}
+
+/* Icon lists: the item's icon first */
+.reveal ul.icon-list li[class^="ic-"]::before{content:"";display:block!important;flex:none;width:42px;height:42px;margin-top:2px;background:var(--ic) center/contain no-repeat}
+
+/* Limits: the diagram left to right across the slide, the four points in two columns under it */
+.reveal .limits .mermaid{margin:4px 0 8px}
+.reveal .limits .mermaid svg{max-height:170px}
+.reveal .limits ul.icon-list{display:grid;grid-template-columns:1fr 1fr;gap:4px 34px}
+.reveal .limits ul.icon-list li{font-size:23px;margin:0 0 10px}
+
+/* Design: the diagram a little shorter, so the last bullet clears the slide number */
+.reveal section#design .mermaid svg{max-height:330px}
+.reveal section#design .fig-caption + ul li{margin:4px 0}
+
+/* Timelines: colours that say something. Red = errors, amber = one instance / waiting,
+   blue = starting, green = healthy, two instances. Mermaid numbers the sections -1, 0, 1 */
+.reveal section:is(#elasticity,#failure-events) .mermaid svg :is(.section--1,.section-0,.section-1) :is(path,rect,line,circle){stroke-width:2px!important}
+.reveal section#elasticity .mermaid svg .section--1 :is(path,rect,circle){fill:#5c3d00!important;stroke:#ffb454!important}
+.reveal section#elasticity .mermaid svg .section-0 :is(path,rect,circle){fill:#173a63!important;stroke:#8ab4ff!important}
+.reveal section#elasticity .mermaid svg .section-1 :is(path,rect,circle){fill:#1e4d23!important;stroke:#7bd389!important}
+.reveal section#failure-events .mermaid svg .section--1 :is(path,rect,circle){fill:#5e1a1a!important;stroke:#ff6b6b!important}
+.reveal section#failure-events .mermaid svg .section-0 :is(path,rect,circle){fill:#5c3d00!important;stroke:#ffb454!important}
+.reveal section#failure-events .mermaid svg .section-1 :is(path,rect,circle){fill:#1e4d23!important;stroke:#7bd389!important}
+
+/* References: the line a marker jumped to, and the way back, on the dark slides */
+.reveal .entry-target{background:#20364f;outline-color:var(--accent)}
+.reveal .ref-back{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+/* Fixes after the check */
+.reveal ul.icon-list li[class^="ic-"]::before{position:static!important;transform:none!important}
+.reveal .three.answer h3{font-size:27px}
+/* The short link's hover: tinyurl.com/ small, the code large, the only part to remember (deck.js splits the
+   tip's text). The link itself stays small, bottom left, as in the memes deck */
+#ref-tip .tip-host{font-size:0.45em;opacity:0.85}
+#ref-tip .tip-code{font-weight:bold;letter-spacing:0.04em;color:#67d8d0}
+
+/*********************************************************
+ * November 10, fourth pass
+ *********************************************************/
+/* Hover tips (a name, a short link, a reference, the bars under a heading): dark box, light text.
+   ARJ draws them in --navy, which this deck makes light for its headings */
+#ref-tip{background:#15263d;color:#eef4fb;border-left-color:#67d8d0;box-shadow:0 6px 18px rgba(0,0,0,0.5)}
+
+/* Limits: the diagram (left to right) on the left, the four points on the right */
+.reveal .two.limits{grid-template-columns:520px 1fr;gap:30px}
+.reveal .two.limits .mermaid svg{max-height:300px}
+.reveal .two.limits ul.icon-list{display:block}
+.reveal .two.limits ul.icon-list li{font-size:23px;margin:0 0 14px}
+
+/* Timelines: as wide as the slide (deck.js trims the empty space under them), no bold text */
+.reveal section:is(#elasticity,#failure-events) .mermaid svg{width:100%;max-height:430px}
+.reveal section#elasticity .mermaid svg{max-height:330px}
+/* Timeline rows (classes set by deck.js): stages and times bold, events plain */
+.reveal .mermaid svg .timeline-node :is(text,tspan){font-weight:normal!important}
+.reveal .mermaid svg :is(.tl-section,.tl-time) :is(text,tspan){font-weight:bold!important}
+/* Mermaid brightens each event box with a filter, which also makes its text look bold; boxes drawn plain */
+.reveal .mermaid svg .eventWrapper{filter:none!important}
+
+/* Finish: the microphone before Questions, the email icon before Email me */
+.reveal .finish-slide h3.finish-questions::before{content:none}
+.reveal .finish-slide h3.finish-questions .finish-emoji{margin-right:0.3em}
+.reveal .finish-slide h3.finish-questions .mail-icon{display:inline-block;width:56px;height:56px;margin-left:0.4em;background:url("src/img/icons/email-outline.svg") center/contain no-repeat}
+
+/* CSV files: a file icon in ARJ's style, green, "CSV" */
+:root{--icon-file-csv:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 1h10l4.5 4.5V23H5z' fill='white' stroke='%2344546f' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M15 1v4.5h4.5' fill='none' stroke='%2344546f' stroke-width='1.4' stroke-linejoin='round'/%3E%3Crect x='0.5' y='9.5' width='23' height='11.5' rx='2' fill='%23217346'/%3E%3Ctext x='12' y='18.27' font-family='Arial,sans-serif' font-weight='bold' font-size='8.4' text-anchor='middle' fill='white'%3ECSV%3C/text%3E%3C/svg%3E")}
+.reveal a.file-link[href$=".csv"]::before{background-image:var(--icon-file-csv)}
+
+/*********************************************************
+ * November 10, fifth pass
+ *********************************************************/
+/* Title slide: room above the title. The QR code floats right with the date under it; the text beside
+   it, then "Built with" small, the full width under the QR code */
+.reveal .slides>section.arj-title,html.print-pdf .reveal .slides .pdf-page>section.arj-title{padding-top:46px!important}
+.reveal .arj-title .title-body{display:block}
+.reveal .arj-title figure.deck-qr{float:right;width:290px;margin:4px 0 10px 34px}
+.reveal .arj-title figure.deck-qr figcaption.byline{margin:12px 0 0;font-size:22px;line-height:1.3;color:var(--muted);text-align:center}
+.reveal .arj-title .title-text .byline{font-size:40px}
+.reveal .arj-title :is(.title-module,.title-course){margin:0.35em 0 0;font-size:25px;line-height:1.3;text-align:center;color:var(--ink)}
+.reveal .arj-title .title-course{margin-top:0.15em}
+.reveal .arj-title .title-quote{margin-top:0.9em}
+.reveal .arj-title .built-with{clear:both;margin:0;padding-top:12px;font-size:18px}
+.reveal .icon-tinyurl{background-image:url("src/img/favicons/tinyurl.png")}
+.reveal .arj-title figure.deck-qr figcaption a{display:inline;border-bottom:2px solid transparent}
+.reveal .arj-title .title-quote cite i{font-style:italic}
+
+/* About the author: the name leaves the deck, so the new-tab mark after it; the tech stack as small tags */
+.reveal .about-slide .author-name a::after{content:"";display:inline-block!important;width:0.5em;height:0.5em;margin-left:0.1em;align-self:center;background:var(--navy-soft);-webkit-mask:var(--icon-external) center/contain no-repeat;mask:var(--icon-external) center/contain no-repeat}
+.reveal .about-slide .author-name img.inline-logo{border-radius:12px}
+.reveal ul.stack{list-style:none;padding:0;margin:-8px 0 22px;display:flex;flex-wrap:wrap;gap:10px}
+.reveal ul.stack li{display:flex;align-items:center;gap:8px;margin:0;padding:5px 14px 5px 10px;font-size:20px;line-height:1.2;border:1px solid var(--line);border-radius:6px;background:#15263d;color:var(--ink)}
+.reveal ul.stack li::before{content:"";position:static!important;transform:none!important;width:22px!important;height:22px!important;margin:0!important;border-radius:0!important;flex:none;background:var(--ic) center/contain no-repeat!important}
+.reveal .about-slide .author-name a::after{margin-left:-6px}
+.reveal ul.stack li.stack-mysql::before{background-color:#eef4fb!important;border-radius:3px!important}
+.reveal .stack-python{--ic:url("src/img/favicons/python.svg")}
+.reveal .stack-java{--ic:url("src/img/favicons/java.svg")}
+.reveal .stack-spring{--ic:url("src/img/favicons/spring.svg")}
+.reveal .stack-javascript{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/javascript/javascript-original.svg")}
+.reveal .stack-typescript{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/typescript/typescript-original.svg")}
+.reveal .stack-csharp{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/csharp/csharp-original.svg")}
+.reveal .stack-mysql{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/mysql/mysql-original.svg")}
+.reveal .stack-revealjs{--ic:url("https://cdn.jsdelivr.net/npm/apocalypse-reveal-js@1.8.15/arj/img/favicons/revealjs.svg")}
+
+/* Cards (method, answer): the heading centred, in the accent colour, a line under it; answer text justified */
+.reveal .three h3[class^="ic-"]{justify-content:center;color:var(--accent);padding-bottom:8px;border-bottom:2px solid var(--line)}
+.reveal .three.answer p{text-align:justify;hyphens:none}
+/* A link to a heading in a Markdown file on GitHub (report.md#54-...): the Markdown file icon */
+.reveal a[href*="/blob/"][href*=".md#"]::before{background-image:var(--icon-file-md)!important;filter:none!important}
+
+/* A figure's data: its own line under the caption. It goes to the Data sets slide (deck.js), not a download */
+.reveal .fig-data{margin:-10px 0 12px;text-align:center;font-size:18px;color:var(--muted)}
+.reveal section#one-vs-two .echart.chart-short{height:262px}
+.reveal .fig-data + ul{margin-top:4px}
+.reveal .fig-data + ul li{margin:6px 0;font-size:24px}
+.reveal section#design .fig-data + ul li{margin:4px 0}
+.reveal a.data-link{white-space:nowrap}
+.reveal a.data-link::before,.reveal a.csv-download::before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-right:0.25em;vertical-align:-0.18em;background:var(--icon-file-csv) center/contain no-repeat}
+
+/* Data sets slide: one row per figure; the row a data link came from is marked, with the way back */
+.reveal table.data-sets{font-size:22px;margin:6px 0 18px}
+.reveal table.data-sets td{padding:9px 12px;vertical-align:middle}
+.reveal table.data-sets td:first-child,.reveal table.data-sets td:nth-child(3){text-align:center}
+.reveal table.data-sets td:last-child{white-space:nowrap}
+.reveal table.data-sets td:last-child a+a{margin-left:16px}
+.reveal table.data-sets a.fig-link::before{content:"";display:inline-block;width:1em;height:1em;margin-right:0.25em;vertical-align:-0.12em;background:var(--navy-soft);-webkit-mask:var(--icon-media) center/contain no-repeat;mask:var(--icon-media) center/contain no-repeat}
+.reveal table.data-sets tr.data-target td{background:#20364f}
+.reveal table.data-sets .ref-back{margin-left:16px}
+.reveal a.csv-download::after{display:none!important}
+
+/* Software used: an icon and heading for each kind, the products on one line under it, three columns */
+.reveal .software-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 30px;margin-top:6px}
+.reveal .software-grid>div{padding:12px 16px;border:1px solid var(--line)}
+.reveal .software-grid h3{display:flex;align-items:center;gap:12px;margin:0 0 6px;font-size:25px;color:var(--accent)}
+.reveal .software-grid h3::before{content:"";width:34px;height:34px;flex:none;background:var(--ic) center/contain no-repeat}
+.reveal .software-grid p{margin:0;font-size:20px;line-height:1.45}
+.reveal .software-grid a{white-space:nowrap}
+.reveal .ic-aws{--ic:url("src/img/icons/aws.svg")}
+.reveal .ic-application-brackets-outline{--ic:url("src/img/icons/application-brackets-outline.svg")}
+.reveal .ic-script-text-outline{--ic:url("src/img/icons/script-text-outline.svg")}
+.reveal .ic-speedometer{--ic:url("src/img/icons/speedometer.svg")}
+.reveal .ic-chart-box-outline{--ic:url("src/img/icons/chart-box-outline.svg")}
+.reveal .ic-sitemap-outline{--ic:url("src/img/icons/sitemap-outline.svg")}
+.reveal .ic-video-outline{--ic:url("src/img/icons/video-outline.svg")}
+
+/*********************************************************
+ * November 10, sixth pass
+ *********************************************************/
+/* Title slide: two columns. The text on the left, left-aligned, beside the QR code; "Built with" under both */
+.reveal .slides .arj-title .title-text h3,.reveal .arj-title :is(.title-desc,.title-text .byline,.title-module,.title-course,.title-quote){text-align:left}
+.reveal .arj-title .title-text{overflow:hidden}
+.reveal .arj-title .title-course{margin-top:0.5em}
+.reveal .arj-title .title-module{margin-top:0.1em;color:var(--muted)}
+.reveal .arj-title .built-with{text-align:left}
+/* The adapted quote: the film's word struck through, the replacement emphasised */
+.reveal .title-quote del,.reveal blockquote del{text-decoration:line-through;text-decoration-thickness:2px;opacity:0.7}
+.reveal .title-quote em.swap{font-style:italic;font-weight:bold;color:var(--accent)}
+/* Footer: a little smaller, and lifted clear of the three buttons at the bottom left */
+.reveal .arj-title .slide-footer{font-size:17px;bottom:34px}
+
+/* About the author: two columns. Left: the name, qualifications, GitHub and email; right: the stack in two rows */
+.reveal .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;align-items:start}
+.reveal .about-slide .author-name{font-size:40px;margin:4px 0 18px}
+.reveal .about-slide .author-name img.inline-logo{width:56px;height:56px}
+.reveal .about-slide h3.about-head{margin:14px 0 8px;font-size:24px;color:var(--accent);text-transform:none}
+.reveal .about-slide ul:is(.quals,.contact){list-style:none;margin:0 0 6px;padding:0}
+.reveal .about-slide ul:is(.quals,.contact) li{display:flex;align-items:center;gap:12px;margin:6px 0;padding:0;font-size:23px}
+.reveal .about-slide ul:is(.quals,.contact) li::before{content:"";position:static!important;transform:none!important;width:30px!important;height:30px!important;margin:0!important;border-radius:0!important;flex:none;background:var(--ic) center/contain no-repeat!important}
+.reveal .about-slide ul.contact{margin-top:22px}
+.reveal .qual-msc{--ic:url("src/img/icons/school.svg")}
+.reveal .qual-bsc{--ic:url("src/img/icons/certificate-outline.svg")}
+.reveal .contact-github{--ic:url("src/img/icons/github.svg")}
+.reveal .contact-mail{--ic:url("src/img/icons/email-outline.svg")}
+.reveal .about-stack ul.stack{margin:0 0 6px;gap:8px}
+.reveal .about-stack ul.stack li{font-size:17px;padding:4px 10px 4px 8px;gap:6px}
+.reveal .about-stack ul.stack li::before{width:19px!important;height:19px!important}
+.reveal .about-grid{grid-template-columns:1.1fr 1fr}
+.reveal .stack-dotnet{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/dotnetcore/dotnetcore-original.svg")}
+.reveal .stack-maui{--ic:url("src/img/icons/cellphone.svg")}
+.reveal .stack-bigdata{--ic:url("src/img/icons/big-data.svg")}
+.reveal .stack-django{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/django/django-plain.svg")}
+.reveal .stack-jupyter{--ic:url("src/img/favicons/jupyter.svg")}
+.reveal ul.stack li.stack-django::before{background-color:#eef4fb!important;border-radius:3px!important}
+
+/* Exit: the heading is level 2 in the Markdown (one level-1 heading per file), drawn as big as before */
+.reveal .exit-slide h2{width:100%;text-align:center;font-size:60px;background:none;padding-bottom:0}
+html.print-pdf .reveal .exit-slide h2{margin-top:300px!important}
+
+/* Data: "Dataset n" with a data set icon; the file name with the CSV icon */
+:root{--icon-dataset:url("src/img/icons/table-large.svg");--icon-download:url("src/img/icons/download.svg")}
+.reveal a.data-link::before,.reveal td.set-no::before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-right:0.25em;vertical-align:-0.18em;background:var(--icon-dataset) center/contain no-repeat}
+.reveal .csv-name::before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-right:0.25em;vertical-align:-0.18em;background:var(--icon-file-csv) center/contain no-repeat}
+.reveal .fig-data .csv-name{color:var(--muted)}
+.reveal table.data-sets{font-size:19px;margin:0 0 10px}
+.reveal table.data-sets td{padding:4px 10px;line-height:1.25}
+.reveal table.data-sets th{padding:6px 10px}
+.reveal table.data-sets td:first-child{text-align:left;white-space:nowrap}
+.reveal table.data-sets :is(td,th).num{text-align:right!important}
+.reveal table.data-sets td:nth-child(3){text-align:right}
+.reveal table.data-sets td:nth-child(4){text-align:center;white-space:nowrap}
+.reveal table.data-sets .set-desc{font-size:16px;color:var(--muted)}
+.reveal table.data-sets a.md-view::before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-right:0.25em;vertical-align:-0.18em;background:var(--icon-file-md) center/contain no-repeat}
+.reveal table.data-sets a.csv-download::before{background:var(--icon-download) center/contain no-repeat}
+.reveal section#data p.caption{font-size:17px;margin:4px 0 0}
+
+/* Software used: three columns, no boxes; a heading with its icon, then a bullet list */
+.reveal .software-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 40px;margin-top:4px}
+.reveal .software-list h3{display:flex;align-items:center;gap:12px;margin:0 0 4px;font-size:24px;color:var(--accent);text-transform:none}
+.reveal .software-list h3::before{content:"";width:30px;height:30px;flex:none;background:var(--ic) center/contain no-repeat}
+.reveal .software-list ul{margin:0 0 10px;padding:0}
+.reveal .software-list li{margin:2px 0;font-size:19px;line-height:1.35}

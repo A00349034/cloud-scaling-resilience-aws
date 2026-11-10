@@ -1,0 +1,47 @@
+---
+config:
+  look: neo
+  theme: redux-color
+  layout: elk
+  themeVariables:
+    fontSize: 26px
+    edgeLabelBackground: "#ffffff"
+---
+flowchart LR
+  U@{ icon: "mdi:account-group", form: "circle", label: "Users", pos: "b", h: 48 }
+  IGW@{ icon: "logos:aws-vpc", form: "rounded", label: "Internet Gateway", pos: "b", h: 44 }
+
+  subgraph VPC["VPC 10.0.0.0/16 · Availability Zones a and b"]
+    direction LR
+    subgraph PUB["Public subnets<br>10.0.1.0/24, 10.0.2.0/24"]
+      direction TB
+      ALB@{ icon: "logos:aws-elb", form: "rounded", label: "Application<br>Load Balancer", pos: "b", h: 52 }
+      NATA@{ icon: "mdi:router-network", form: "rounded", label: "NAT gateway a", pos: "b", h: 40 }
+      NATB@{ icon: "mdi:router-network", form: "rounded", label: "NAT gateway b", pos: "b", h: 40 }
+    end
+    subgraph APP["Private app subnets<br>10.0.11.0/24, 10.0.12.0/24"]
+      direction TB
+      subgraph ASG["Product Auto Scaling group<br>min 2, desired 2, max 4"]
+        PA@{ icon: "logos:aws-ec2", form: "rounded", label: "Product a", pos: "b", h: 44 }
+        PB@{ icon: "logos:aws-ec2", form: "rounded", label: "Product b", pos: "b", h: 44 }
+      end
+      CA@{ icon: "logos:aws-ec2", form: "rounded", label: "Coupon a", pos: "b", h: 44 }
+      CB@{ icon: "logos:aws-ec2", form: "rounded", label: "Coupon b", pos: "b", h: 44 }
+    end
+    subgraph DB["Private DB subnets<br>10.0.21.0/24, 10.0.22.0/24<br>no internet route"]
+      direction TB
+      RA@{ icon: "logos:aws-rds", form: "rounded", label: "RDS primary a", pos: "b", h: 48 }
+      RB@{ icon: "logos:aws-rds", form: "rounded", label: "RDS standby b", pos: "b", h: 48 }
+    end
+  end
+
+  U -- "HTTPS" --> IGW -- "ALB-SG<br>80/443" --> ALB
+  ALB -- "App-SG<br>from ALB-SG only" --> PA
+  ALB --> PB
+  PA --> CA
+  PB --> CB
+  CA -- "DB-SG: 3306<br>from App-SG only" --> RA
+  PA & PB & CB --> RA
+  RA <-. "synchronous<br>copy" .-> RB
+  PA -. "outbound" .-> NATA
+  PB -. "outbound" .-> NATB

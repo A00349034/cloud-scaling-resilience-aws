@@ -1,0 +1,30 @@
+/*********************************************************
+ * Each website's icon (favicon), before links to it. ARJ draws them
+ * (arj/css/arj.css, "Icons"); the files are in ../img/favicons/ (where each
+ * came from: its readme.md). A new site: one line here, its icon there.
+ *********************************************************/
+.reveal a[href*="amazon.com"]::before  { background-image: url("../img/favicons/aws.png"); }      /* AWS documentation and pricing */
+.reveal a[href*="grafana.com"]::before { background-image: url("../img/favicons/grafana.png"); }  /* Grafana k6 */
+.reveal a[href*="mermaid.js.org"]::before { background-image: url("../img/favicons/mermaid.svg"); } /* Mermaid */
+.reveal a[href*="echarts.apache.org"]::before { background-image: url("../img/favicons/echarts.png"); } /* Apache ECharts */
+/* November 10: the course, explanations, and each product on the Software used slide. More particular addresses after general ones */
+.reveal a[href*="tus.ie"]::before { background-image: url("../img/favicons/tus.png"); }                 /* TUS */
+.reveal a[href*="wikipedia.org"]::before { background-image: url("../img/favicons/wikipedia.png"); }    /* Wikipedia: p95 (percentile) */
+.reveal a[href*="grafana.com/oss/k6"]::before,
+.reveal a[href*="grafana.com/docs/k6"]::before { background-image: url("../img/favicons/k6.svg"); }      /* k6 */
+.reveal a[href*="aws.amazon.com/ec2/"]::before { background-image: url("../img/favicons/aws-ec2.svg"); }
+.reveal a[href*="aws.amazon.com/ec2/autoscaling"]::before { background-image: url("../img/favicons/aws.png"); }
+.reveal a[href*="aws.amazon.com/elasticloadbalancing"]::before { background-image: url("../img/favicons/aws-elb.svg"); }
+.reveal a[href*="aws.amazon.com/rds"]::before { background-image: url("../img/favicons/aws-rds.svg"); }
+.reveal a[href*="aws.amazon.com/cloudwatch"]::before { background-image: url("../img/favicons/aws-cloudwatch.svg"); }
+.reveal a[href*="aws.amazon.com/systems-manager"]::before { background-image: url("../img/favicons/aws-systems-manager.svg"); }
+.reveal a[href*="aws.amazon.com/corretto"]::before { background-image: url("../img/favicons/java.svg"); }
+.reveal a[href*="learn.microsoft.com/powershell"]::before { background-image: url("../img/favicons/powershell.svg"); }
+.reveal a[href*="spring.io"]::before { background-image: url("../img/favicons/spring.svg"); }
+.reveal a[href*="docker.com"]::before { background-image: url("../img/favicons/docker.svg"); }
+.reveal a[href*="python.org"]::before { background-image: url("../img/favicons/python.svg"); }
+.reveal a[href*="pandas.pydata.org"]::before { background-image: url("../img/favicons/pandas.svg"); }
+.reveal a[href*="matplotlib.org"]::before { background-image: url("../img/favicons/matplotlib.svg"); }
+.reveal a[href*="jupyter.org"]::before { background-image: url("../img/favicons/jupyter.svg"); }
+.reveal a[href*="ffmpeg.org"]::before { background-image: url("../img/favicons/ffmpeg.svg"); }
+.reveal a[href*="npmjs.com/package/apocalypse-reveal-js"]::before { background-image: url("https://cdn.jsdelivr.net/npm/apocalypse-reveal-js@1.8.15/arj/img/arj-logo.svg"); }

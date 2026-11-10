@@ -1,0 +1,35 @@
+---
+config:
+  look: neo
+  theme: redux-color
+  layout: elk
+  themeVariables:
+    fontSize: 26px
+    edgeLabelBackground: "#ffffff"
+  themeCSS: ".icon-shape p, .image-shape p, .label-container + g p { background: transparent !important; } .labelBkg { background: transparent !important; }"
+---
+flowchart LR
+  C@{ icon: "mdi:laptop", form: "circle", label: "Client<br>k6 on laptop", pos: "b", h: 56 }
+
+  subgraph AWS["AWS eu-west-1 · default VPC 172.31.0.0/16 · public subnets in 3 Availability Zones"]
+    A@{ icon: "logos:aws-elb", form: "rounded", label: "Application Load Balancer<br>health check /actuator/health", pos: "b", h: 56 }
+    subgraph ASG["Product Auto Scaling group · t3.micro · min 1, max 2"]
+      P1@{ icon: "logos:aws-ec2", form: "rounded", label: "Product 1<br>port 9090", pos: "b", h: 48 }
+      P2@{ icon: "logos:aws-ec2", form: "rounded", label: "Product 2<br>port 9090", pos: "b", h: 48 }
+    end
+    K@{ icon: "logos:aws-ec2", form: "rounded", label: "Coupon × 1<br>port 9091", pos: "b", h: 48 }
+    D@{ icon: "logos:aws-rds", form: "rounded", label: "RDS MySQL 8.4<br>single AZ, not public", pos: "b", h: 56 }
+    subgraph SUP["Start-up and scaling"]
+      direction TB
+      S3@{ icon: "logos:aws-s3", form: "rounded", label: "S3<br>application JARs", pos: "b", h: 40 }
+      SSM@{ icon: "logos:aws-systems-manager", form: "rounded", label: "Parameter Store<br>database settings", pos: "b", h: 40 }
+      CW@{ icon: "logos:aws-cloudwatch", form: "rounded", label: "CloudWatch<br>CPU target 30%", pos: "b", h: 40 }
+    end
+  end
+
+  C -- "HTTP 80<br>client address only" --> A
+  A --> P1 & P2
+  P1 & P2 -- "writes: discount" --> K
+  P1 & P2 -- "SQL" --> D
+  K -- "SQL" --> D
+  SUP -. "boot, scale" .-> ASG

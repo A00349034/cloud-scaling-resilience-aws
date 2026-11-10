@@ -1,0 +1,21 @@
+{
+	// Run and Debug -> "Slides (Edge)" or "Slides (Chrome)", then F5.
+	// Starts the "Slides: serve" task first, then opens the deck.
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Slides (Edge)",
+			"type": "msedge",
+			"request": "launch",
+			"url": "http://localhost:8011/docs/screencast-deck/",
+			"preLaunchTask": "Slides: serve"
+		},
+		{
+			"name": "Slides (Chrome)",
+			"type": "chrome",
+			"request": "launch",
+			"url": "http://localhost:8011/docs/screencast-deck/",
+			"preLaunchTask": "Slides: serve"
+		}
+	]
+}
