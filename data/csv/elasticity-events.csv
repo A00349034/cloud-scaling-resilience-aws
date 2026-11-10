@@ -1,0 +1,7 @@
+time_utc,stage,event
+2026-11-09T19:10:29Z,"One instance, waiting for the alarm",200 users start
+2026-11-09T19:11:00Z,"One instance, waiting for the alarm",CPU over the 30% target (1-minute CloudWatch point)
+2026-11-09T19:14:48Z,Second instance starting,Alarm: desired capacity 1 to 2
+2026-11-09T19:16:20Z,Two instances serving,New instance healthy
+2026-11-09T19:17:00Z,Two instances serving,Server p95 down by about 55% (1-minute CloudWatch point)
+2026-11-09T19:24:32Z,Two instances serving,Load ends

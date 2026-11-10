@@ -1,0 +1,7 @@
+time_utc,stage,event
+2026-11-09T18:59:20Z,Errors,"Instance terminated; 4,180 failed requests in 10s"
+2026-11-09T18:59:47Z,Errors,"Dead target removed, 27s later"
+2026-11-09T18:59:50Z,One instance carries the load,Errors stop
+2026-11-09T19:00:17Z,One instance carries the load,"Auto Scaling notices, 57s"
+2026-11-09T19:00:30Z,One instance carries the load,Replacement starts; CPU held at 10%
+2026-11-09T19:06:13Z,Two instances again,"Replacement healthy, 6m 53s"
