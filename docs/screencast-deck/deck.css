@@ -115,9 +115,9 @@ html,body,.reveal-viewport{background:var(--paper);color:var(--ink)}
 .reveal .echart{width:100%;margin:6px 0 0}
 .reveal .echart.chart-short{height:290px}
 .reveal .echart.chart-tall{height:468px}
-.reveal section#failure .echart.chart-short{height:350px}
+.reveal section#failure .echart.chart-short{height:310px}
 /* Mermaid timelines fill the width */
-.reveal section#elasticity .mermaid svg,.reveal section#failure-events .mermaid svg{max-height:330px}
+.reveal section#elasticity-events .mermaid svg,.reveal section#failure-events .mermaid svg{max-height:330px}
 /* Limits: diagram left, icon list right */
 .reveal .two.limits{grid-template-columns:330px 1fr;align-items:center;gap:36px;margin-top:6px}
 .reveal .two.limits .mermaid{margin:0}
@@ -250,10 +250,10 @@ html.print-pdf .reveal .exit-slide h1{margin-top:300px!important}
 
 /* Timelines: colours that say something. Red = errors, amber = one instance / waiting,
    blue = starting, green = healthy, two instances. Mermaid numbers the sections -1, 0, 1 */
-.reveal section:is(#elasticity,#failure-events) .mermaid svg :is(.section--1,.section-0,.section-1) :is(path,rect,line,circle){stroke-width:2px!important}
-.reveal section#elasticity .mermaid svg .section--1 :is(path,rect,circle){fill:#5c3d00!important;stroke:#ffb454!important}
-.reveal section#elasticity .mermaid svg .section-0 :is(path,rect,circle){fill:#173a63!important;stroke:#8ab4ff!important}
-.reveal section#elasticity .mermaid svg .section-1 :is(path,rect,circle){fill:#1e4d23!important;stroke:#7bd389!important}
+.reveal section:is(#elasticity-events,#failure-events) .mermaid svg :is(.section--1,.section-0,.section-1) :is(path,rect,line,circle){stroke-width:2px!important}
+.reveal section#elasticity-events .mermaid svg .section--1 :is(path,rect,circle){fill:#5c3d00!important;stroke:#ffb454!important}
+.reveal section#elasticity-events .mermaid svg .section-0 :is(path,rect,circle){fill:#173a63!important;stroke:#8ab4ff!important}
+.reveal section#elasticity-events .mermaid svg .section-1 :is(path,rect,circle){fill:#1e4d23!important;stroke:#7bd389!important}
 .reveal section#failure-events .mermaid svg .section--1 :is(path,rect,circle){fill:#5e1a1a!important;stroke:#ff6b6b!important}
 .reveal section#failure-events .mermaid svg .section-0 :is(path,rect,circle){fill:#5c3d00!important;stroke:#ffb454!important}
 .reveal section#failure-events .mermaid svg .section-1 :is(path,rect,circle){fill:#1e4d23!important;stroke:#7bd389!important}
@@ -283,8 +283,8 @@ html.print-pdf .reveal .exit-slide h1{margin-top:300px!important}
 .reveal .two.limits ul.icon-list li{font-size:23px;margin:0 0 14px}
 
 /* Timelines: as wide as the slide (deck.js trims the empty space under them), no bold text */
-.reveal section:is(#elasticity,#failure-events) .mermaid svg{width:100%;max-height:430px}
-.reveal section#elasticity .mermaid svg{max-height:330px}
+.reveal section:is(#elasticity-events,#failure-events) .mermaid svg{width:100%;max-height:430px}
+.reveal section#elasticity-events .mermaid svg{max-height:330px}
 /* Timeline rows (classes set by deck.js): stages and times bold, events plain */
 .reveal .mermaid svg .timeline-node :is(text,tspan){font-weight:normal!important}
 .reveal .mermaid svg :is(.tl-section,.tl-time) :is(text,tspan){font-weight:bold!important}
@@ -331,6 +331,7 @@ html.print-pdf .reveal .exit-slide h1{margin-top:300px!important}
 .reveal .stack-spring{--ic:url("src/img/favicons/spring.svg")}
 .reveal .stack-javascript{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/javascript/javascript-original.svg")}
 .reveal .stack-typescript{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/typescript/typescript-original.svg")}
+.reveal .stack-cpp{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/cplusplus/cplusplus-original.svg")}
 .reveal .stack-csharp{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/csharp/csharp-original.svg")}
 .reveal .stack-mysql{--ic:url("https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/mysql/mysql-original.svg")}
 .reveal .stack-revealjs{--ic:url("https://cdn.jsdelivr.net/npm/apocalypse-reveal-js@1.8.15/arj/img/favicons/revealjs.svg")}
@@ -343,7 +344,7 @@ html.print-pdf .reveal .exit-slide h1{margin-top:300px!important}
 
 /* A figure's data: its own line under the caption. It goes to the Data sets slide (deck.js), not a download */
 .reveal .fig-data{margin:-10px 0 12px;text-align:center;font-size:18px;color:var(--muted)}
-.reveal section#one-vs-two .echart.chart-short{height:262px}
+.reveal section#one-vs-two .echart.chart-short{height:380px}
 .reveal .fig-data + ul{margin-top:4px}
 .reveal .fig-data + ul li{margin:6px 0;font-size:24px}
 .reveal section#design .fig-data + ul li{margin:4px 0}
@@ -513,3 +514,12 @@ html.print-pdf .reveal .exit-slide h2.exit-words{margin-top:18px!important}
 /* Print: a figure's or data set's number jumps within the slides, so no new-tab arrow; the end card above its words */
 .reveal :is(a.data-link,a.ref.media).opens-tab::after{content:none!important}
 html.print-pdf .reveal .slides section.exit-slide{flex-direction:column!important;align-items:center!important;justify-content:center!important}
+
+/* Answer slide: title "What do you see?", "The answer." big under it; the film still centred under the cards */
+.reveal section#answer p.answer-big{font-size:46px;line-height:1.12;font-weight:bold;color:var(--accent);margin:-6px 0 0}
+.reveal section#answer .three.answer{margin:16px 0 12px}
+.reveal section#answer .three.answer h3{margin-bottom:10px}
+.reveal section#answer .three.answer p{font-size:21px;line-height:1.35;margin:0}
+.reveal section#answer figure.answer-meme{width:270px;margin:0 auto 8px;text-align:center}
+.reveal section#answer figure.answer-meme img{display:block;width:100%;height:auto;border:1px solid var(--line)}
+.reveal section#answer figure.answer-meme .fig-caption{margin:4px 0 0;white-space:nowrap}

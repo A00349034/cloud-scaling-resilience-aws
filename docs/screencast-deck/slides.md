@@ -4,7 +4,7 @@
 
 <div class="title-body no-link-icon">
   <figure class="deck-qr"><img src="src/img/qr/deck-qr.svg" alt="QR code: these slides online, a00349034.github.io/cloud-scaling-resilience-aws/docs/screencast-deck" />
-    <figcaption class="byline"><span class="calendar" aria-hidden="true">📅</span><a class="ext date-link" href="https://github.com/A00349034/cloud-scaling-resilience-aws/commits" title="Version 1.8.2: the change history"><time class="deck-date" datetime="2026-11-10T05:00:00+00:00">November 2026</time></a></figcaption>
+    <figcaption class="byline"><span class="calendar" aria-hidden="true">📅</span><a class="ext date-link" href="https://github.com/A00349034/cloud-scaling-resilience-aws/commits" title="Version 1.9.0: the change history"><time class="deck-date" datetime="2026-11-12T00:30:00+00:00">November 2026</time></a></figcaption>
   </figure>
   <div class="title-text">
     <h3>What changes when the Product service scales?</h3>
@@ -27,7 +27,7 @@
 <footer class="slide-footer no-link-icon">
   <p class="deck-pdf"><a class="ext" href="src/pdf/cloud-scalability-resilience-mark-crowe-2026.pdf" download="cloud-scalability-resilience-mark-crowe-2026.pdf" title="Download the slides as a PDF" aria-label="Download the slides as a PDF">Download as PDF</a></p>
   <p class="footer-rights"><a class="ext" href="https://github.com/A00349034" title="github.com/A00349034">© 2026 Mark Crowe</a></p>
-  <p class="deck-version-line"><a class="version-link ext" href="https://github.com/A00349034/cloud-scaling-resilience-aws/commits" title="The change history">Version <span class="deck-version">1.8.2</span></a></p>
+  <p class="deck-version-line"><a class="version-link ext" href="https://github.com/A00349034/cloud-scaling-resilience-aws/commits" title="The change history">Version <span class="deck-version">1.9.0</span></a></p>
   <p class="deck-short"><a class="ext" href="https://tinyurl.com/3r3c23hm" data-tip="tinyurl.com/3r3c23hm" data-tip-size="72"><span class="arj-icon icon-tinyurl"></span>tinyurl.com/<b>3r3c23hm</b></a></p>
   <p class="deck-url"><a class="ext" href="https://a00349034.github.io/cloud-scaling-resilience-aws/docs/screencast-deck/">a00349034.github.io/cloud-scaling-resilience-aws/docs/screencast-deck</a></p>
 </footer>
@@ -54,6 +54,7 @@
 <div class="about-stack">
 <h3 class="about-head">Languages</h3>
 <ul class="stack" aria-label="Programming languages">
+<li class="stack-cpp">C++</li>
 <li class="stack-csharp">C#</li>
 <li class="stack-java">Java</li>
 <li class="stack-javascript">JavaScript</li>
@@ -78,35 +79,42 @@
 
 <p class="eyebrow">01 · Design</p>
 
-## One endpoint, shared dependencies
+## Three tiers, two zones, one public entry
 <!-- .slide: id="design" data-note="2" -->
 
 <div class="mermaid">
 flowchart LR
-  C@{ icon: "mdi:laptop", form: "circle", label: "Client<br>k6 on laptop", pos: "b", h: 64 }
-  subgraph AWS["AWS eu-west-1"]
-    A@{ icon: "logos:aws-elb", form: "rounded", label: "Application Load Balancer<br>health checks", pos: "b", h: 64 }
-    subgraph ASG["Product × N · Auto Scaling group"]
-      P1@{ icon: "logos:aws-ec2", form: "rounded", label: "Product", pos: "b", h: 56 }
-      P2@{ icon: "logos:aws-ec2", form: "rounded", label: "Product", pos: "b", h: 56 }
+  C@{ icon: "mdi:laptop", form: "circle", label: "Client<br>k6 on laptop", pos: "b", h: 56 }
+  subgraph VPC["Own VPC · two Availability Zones"]
+    subgraph PUB["Public subnets"]
+      A@{ icon: "logos:aws-elb", form: "rounded", label: "Application<br>Load Balancer", pos: "b", h: 56 }
     end
-    K@{ icon: "logos:aws-ec2", form: "rounded", label: "Coupon × 1", pos: "b", h: 56 }
-    D@{ icon: "logos:aws-rds", form: "rounded", label: "MySQL × 1<br>RDS, single AZ", pos: "b", h: 64 }
+    subgraph APP["Private app subnets"]
+      subgraph ASG["Product × N · Auto Scaling group"]
+        P1@{ icon: "logos:aws-ec2", form: "rounded", label: "Product", pos: "b", h: 48 }
+        P2@{ icon: "logos:aws-ec2", form: "rounded", label: "Product", pos: "b", h: 48 }
+      end
+      K@{ icon: "logos:aws-ec2", form: "rounded", label: "Coupon × 1", pos: "b", h: 48 }
+    end
+    subgraph DB["Private DB subnets · no internet route"]
+      D1@{ icon: "logos:aws-rds", form: "rounded", label: "MySQL primary", pos: "b", h: 48 }
+      D2@{ icon: "logos:aws-rds", form: "rounded", label: "Standby", pos: "b", h: 48 }
+    end
   end
   C --> A
   A --> P1 & P2
   P1 -- "writes" --> K
   P2 --> K
-  P1 -- "reads and writes" --> D
-  P2 --> D
-  K --> D
+  P1 & P2 & K --> D1
+  D1 -. "copy" .-> D2
   style ASG stroke:#67d8d0,stroke-width:3px
 </div>
 
-<p class="fig-caption"><a class="ref media" href="#/figures"><sup>1</sup></a> – The architecture as tested. Only the Product tier (outlined) changes</p>
+<p class="fig-caption"><a class="ref media" href="#/figures"><sup>1</sup></a> – The architecture as built on November 11 (sets A and B). Only the load balancer is public; only the Product tier (outlined) changes</p>
 
 - **Changed between tests:** the number of Product instances (1, 2, or scaled automatically)
-- **Kept single in every test:** Coupon and the database
+- **Single in every test:** Coupon. The database has a standby copy in the other zone (Multi-AZ<a class="ref" href="#/references"><sup>4</sup></a>)
+- **First design (set 0, November 9-10):** AWS's default network, public instance addresses, no database standby
 
 ---<!--L2-->
 
@@ -117,41 +125,52 @@ flowchart LR
 
 <figure class="console-shot"><img src="src/img/console-target-group.png" alt="AWS console, target group tus-ca1-product-tg: 1 target, healthy" /></figure>
 
-<p class="fig-caption"><a class="ref media" href="#/figures"><sup>2</sup></a> – The load balancer's target group in the elasticity run, before scale-out: one Product instance, healthy. Health checks decide where requests go<a class="ref" href="#/references"><sup>1</sup></a></p>
+<p class="fig-caption"><a class="ref media" href="#/figures"><sup>2</sup></a> – The load balancer's target group in the set 0 elasticity run, before scale-out: one Product instance, healthy. Health checks decide where requests go<a class="ref" href="#/references"><sup>1</sup></a></p>
 
 ---
 
 <p class="eyebrow">02 · Method</p>
 
-## A controlled comparison
+## A controlled comparison, three times
 <!-- .slide: id="method" data-note="3" -->
 
 <div class="three steps">
 <div><h3 class="ic-server"><span class="number">1</span>Baseline</h3><p>One Product instance<br>Scaling off</p></div>
 <div><h3 class="ic-scale-balance"><span class="number">2</span>Compare</h3><p>Two instances<br>Same workload and data</p></div>
-<div><h3 class="ic-server-remove"><span class="number">3</span>Disrupt</h3><p>Automatic scaling<br>Terminate an instance</p></div>
+<div><h3 class="ic-server-remove"><span class="number">3</span>Disrupt</h3><p>Automatic scaling, lose an instance<br>Stop Coupon, fail over the database</p></div>
 </div>
 
-- **Measured:** requests per second, p95 response time, errors, CPU, event times
-- **p95, the [95th percentile](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Statistics-definitions.html)<a class="ref" href="#/references"><sup>9</sup></a>:** 95% of requests finished faster than this time. **Client p95** is measured by [k6](https://grafana.com/docs/k6/latest/) (a load-testing tool) on the laptop, network included; **server p95** by the load balancer, network excluded<a class="ref" href="#/references"><sup>6</sup></a>
-- **Kept the same:** instance type, workload (k6, <a href="http://localhost:9090/productapi/products">list products</a>, <code>GET /productapi/products</code>), data size (20 products), client location
+- **Three sets:** set 0 (first design, November 9-10); set A (new design, standard CPU credits); set B (new design, unlimited CPU credits). A t3.micro earns CPU credits while idle; with standard credits and none left, its CPU is held at 10%<a class="ref" href="#/references"><sup>3</sup></a>
+- **p95, the [95th percentile](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Statistics-definitions.html)<a class="ref" href="#/references"><sup>9</sup></a>:** 95% of requests finished faster than this time, measured by [k6](https://grafana.com/docs/k6/latest/) (a load-testing tool) on the laptop<a class="ref" href="#/references"><sup>6</sup></a>
+- **Kept the same:** instance type, workload (k6, <code>GET /productapi/products</code>), data size (20 products), client location
 
 ---
 
 <p class="eyebrow">03 · Measured capacity</p>
 
-## One Product instance versus two
-<!-- .slide: id="one-vs-two" data-note="4" -->
+## Two instances doubled capacity, once CPU was not capped
+<!-- .slide: id="capacity" data-note="4" -->
 
-| Product instances (200 users) | Requests per second | Client p95 | Server p95 | Product CPU | Errors |
-|-------------------------------|--------------------:|-----------:|-----------:|-------------|-------:|
-| 1                             |               1,020 |     295 ms |      45 ms | 43%         |  0.27% |
-| 2                             |               1,014 |     366 ms |      29 ms | 22% + 20%   |  0.26% |
+| At 400 users                       | Requests per second, 1 instance | Requests per second, 2 instances | Client p95, 1 → 2 instances |
+|------------------------------------|--------------------------------:|---------------------------------:|----------------------------:|
+| Set 0: first design                |                           1,170 |                            1,171 |                534 → 577 ms |
+| Set A: standard credits, none left |                             433 |                              861 |            3,290 → 1,910 ms |
+| Set B: unlimited credits           |                           1,438 |                            2,483 |                742 → 435 ms |
 
-<div class="echart chart-short" data-chart="oneVsTwo" role="img" aria-label="Requests per second and client p95 against virtual users, one and two Product instances"></div>
+- **Set A:** CPU held at 10%, so one instance stopped at about 430 requests per second, and two capped instances doubled that<a class="ref" href="#/references"><sup>3</sup></a>
+- **Set B:** two instances served 1.7 times as many requests, and client p95 fell by 41%
+
+---<!--L2-->
+
+<p class="eyebrow">03.1 · Measured capacity</p>
+
+## Set B reached twice the set 0 ceiling, from the same laptop
+<!-- .slide: id="one-vs-two" data-note="4a" -->
+
+<div class="echart chart-short" data-chart="oneVsTwo" role="img" aria-label="Requests per second and client p95 against virtual users, one and two Product instances, sets 0 and B"></div>
 
 <div class="fig-meta">
-<p class="fig-caption"><a class="ref media" href="#/figures"><sup>3</sup></a> – <a href="http://localhost:9090/productapi/products">List products</a> (<code>GET /productapi/products</code>) from the laptop, 20 products, 10 to 400 users, 1 minute each</p>
+<p class="fig-caption"><a class="ref media" href="#/figures"><sup>3</sup></a> – <code>GET /productapi/products</code> from the laptop, 10 to 400 users, 1 minute each. Dashed: set 0; solid: set B</p>
 <p class="fig-data"><a class="data-link" href="#/data" data-set="one-vs-two" title="Dataset 1: the numbers behind this figure">1</a> – <span class="csv-name">one-vs-two.csv</span></p>
 </div>
 
@@ -159,8 +178,25 @@ flowchart LR
 
 <p class="eyebrow">04 · Elasticity</p>
 
-## New capacity came almost 6 minutes after the load
+## Scale-out took about 5 minutes, or never happened
 <!-- .slide: id="elasticity" data-note="5" -->
+
+| From the load increase    |  Set 0 |       Set A |  Set B |
+|---------------------------|-------:|------------:|-------:|
+| Desired capacity 1 → 2    | 4m 19s |       never | 3m 20s |
+| New instance healthy      | 5m 51s |           – | 4m 55s |
+| Product CPU, one instance | 56-64% | 10%, capped | 72-76% |
+| Client p95, whole run     | 361 ms |    5,572 ms | 231 ms |
+
+- **Target tracking** on average CPU at 30%, minimum 1, maximum 2 instances, 200 users for 14 minutes<a class="ref" href="#/references"><sup>2</sup></a>
+- **Set A never scaled out:** CPU was held at 10%, under the 30% target, so the policy saw nothing to act on
+
+---<!--L2-->
+
+<p class="eyebrow">04.1 · Elasticity</p>
+
+## Set 0: the events in order
+<!-- .slide: id="elasticity-events" data-note="5a" -->
 
 <div class="mermaid">
 %%{init: {"themeVariables": {"fontSize": "20px"}}}%%
@@ -177,24 +213,21 @@ timeline
 </div>
 
 <div class="fig-meta">
-<p class="fig-caption"><a class="ref media" href="#/figures"><sup>4</sup></a> – Elasticity events (UTC): 200 users, CPU target 30%<a class="ref" href="#/references"><sup>2</sup></a>, min 1, max 2</p>
+<p class="fig-caption"><a class="ref media" href="#/figures"><sup>4</sup></a> – Elasticity events, set 0 (UTC): 200 users, CPU target 30%<a class="ref" href="#/references"><sup>2</sup></a>, min 1, max 2</p>
 <p class="fig-data"><a class="data-link" href="#/data" data-set="elasticity-events" title="Dataset 2: the numbers behind this figure">2</a> – <span class="csv-name">elasticity-events.csv</span></p>
 </div>
 
-- **Almost 6 minutes** from the load to useful capacity: 4m 19s waiting for the alarm, 1m 31s for the new instance to start
-- The server got faster; the client gained only 7%
-
 ---<!--L2-->
 
-<p class="eyebrow">04.1 · Elasticity</p>
+<p class="eyebrow">04.2 · Elasticity</p>
 
-## What CloudWatch saw
-<!-- .slide: id="elasticity-cloudwatch" data-note="5a" -->
+## Set 0: what CloudWatch saw
+<!-- .slide: id="elasticity-cloudwatch" data-note="5b" -->
 
 <div class="echart chart-tall" data-chart="elasticity" role="img" aria-label="Product CPU, load balancer response time, capacity and database CPU during the elasticity run"></div>
 
 <div class="fig-meta">
-<p class="fig-caption"><a class="ref media" href="#/figures"><sup>5</sup></a> – 1-minute data from <a href="https://aws.amazon.com/cloudwatch/">Amazon CloudWatch</a>, the AWS monitoring service</p>
+<p class="fig-caption"><a class="ref media" href="#/figures"><sup>5</sup></a> – Set 0, 1-minute data from <a href="https://aws.amazon.com/cloudwatch/">Amazon CloudWatch</a>, the AWS monitoring service</p>
 <p class="fig-data"><a class="data-link" href="#/data" data-set="elasticity-cloudwatch" title="Dataset 3: the numbers behind this figure">3</a> – <span class="csv-name">elasticity-cloudwatch.csv</span></p>
 </div>
 
@@ -202,24 +235,24 @@ timeline
 
 <p class="eyebrow">05 · Resilience</p>
 
-## Failure: what did the client see?
+## Losing an instance cost 1.3% of requests
 <!-- .slide: id="failure" data-note="6" -->
 
 <div class="echart chart-short" data-chart="failure" role="img" aria-label="Client requests per second, failed requests and p95 around the failure"></div>
 
 <div class="fig-meta">
-<p class="fig-caption"><a class="ref media" href="#/figures"><sup>6</sup></a> – 100 users, 2 instances, one terminated at 18:59:20. k6 requests in 5-second windows</p>
+<p class="fig-caption"><a class="ref media" href="#/figures"><sup>6</sup></a> – Set 0: 100 users, 2 instances, one terminated at 18:59:20. k6 requests in 5-second windows</p>
 <p class="fig-data"><a class="data-link" href="#/data" data-set="failure-client-5s" title="Dataset 4: the numbers behind this figure">4</a> – <span class="csv-name">failure-client-5s.csv</span></p>
 </div>
 
-- **In the first 10 seconds, there were 4,180 failed requests.** Normal on one instance after about 30 seconds<a class="ref" href="#/references"><sup>1</sup></a>
-- **Replacement healthy after 6m 53s:** its CPU was held at 10% by standard CPU credits<a class="ref" href="#/references"><sup>3</sup></a>
+- **Every set: 1.3% of requests failed.** The load balancer kept the dead instance for 21-28 seconds, until its health checks failed<a class="ref" href="#/references"><sup>1</sup></a>
+- **Replacement healthy:** 2m 15s with unlimited credits; about 7 minutes with standard credits (CPU held at 10%)<a class="ref" href="#/references"><sup>3</sup></a>
 
 ---<!--L2-->
 
 <p class="eyebrow">05.1 · Resilience</p>
 
-## Failure: the events in order
+## Set 0: the events in order
 <!-- .slide: id="failure-events" data-note="6a" -->
 
 <div class="mermaid">
@@ -237,59 +270,81 @@ timeline
 </div>
 
 <div class="fig-meta">
-<p class="fig-caption"><a class="ref media" href="#/figures"><sup>7</sup></a> – Failure events (UTC): the client recovered in seconds, full capacity took almost 7 minutes</p>
+<p class="fig-caption"><a class="ref media" href="#/figures"><sup>7</sup></a> – Failure events, set 0 (UTC): the client recovered in seconds, full capacity took almost 7 minutes</p>
 <p class="fig-data"><a class="data-link" href="#/data" data-set="failure-events" title="Dataset 5: the numbers behind this figure">5</a> – <span class="csv-name">failure-events.csv</span></p>
 </div>
 
 ---
 
-<p class="eyebrow">06 · Whole system</p>
+<p class="eyebrow">06 · Dependencies</p>
+
+## When a shared dependency fails
+<!-- .slide: id="dependencies" data-note="7" -->
+
+|                  | Coupon stopped (H06), sets 0, A, B | Database failover (H07), sets A, B |
+|------------------|------------------------------------|------------------------------------|
+| Reads            | 0% failed                          | 0-0.01% failed                     |
+| Writes           | 20 of 20 failed, in every set      | 1 failed; working again after 20 s |
+| Back to normal   | 13-18 s after Coupon restarted     | Standby took over in 40-59 s       |
+| Product instance | Stayed healthy                     | Stayed healthy                     |
+
+- **Coupon:** Product's health check did not notice, so the load balancer kept sending writes to it. More Product instances cannot help
+- **Database:** Multi-AZ switched to the standby, with the same address<a class="ref" href="#/references"><sup>4</sup></a>; Product reconnected without a restart
+
+---
+
+<p class="eyebrow">07 · Whole system</p>
 
 ## What remains limited?
-<!-- .slide: id="limits" data-note="7" -->
+<!-- .slide: id="limits" data-note="8" -->
 
 <div class="two limits">
 <div class="mermaid">
 flowchart LR
   C@{ icon: "mdi:laptop", form: "circle", label: "Laptop, network", pos: "b", h: 40 }
-  P@{ icon: "logos:aws-ec2", form: "rounded", label: "Product × 2", pos: "b", h: 40 }
+  P@{ icon: "logos:aws-ec2", form: "rounded", label: "Product × 2, t3.micro", pos: "b", h: 40 }
   K@{ icon: "logos:aws-ec2", form: "rounded", label: "Coupon × 1", pos: "b", h: 40 }
-  D@{ icon: "logos:aws-rds", form: "rounded", label: "MySQL × 1, one zone", pos: "b", h: 40 }
+  D@{ icon: "logos:aws-rds", form: "rounded", label: "MySQL, shared", pos: "b", h: 40 }
   C --> P
   P --> K
   P --> D
   K --> D
 </div>
 <ul class="icon-list">
-<li class="ic-laptop"><span><b>My laptop and network:</b> server p95 was only 5-15% of client p95; the mobile network changed my address</span></li>
-<li class="ic-database"><span><b>Database:</b> one shared RDS instance in one Availability Zone, CPU up to 48%</span></li>
-<li class="ic-ticket-percent"><span><b>Coupon:</b> one instance on the write path; tested locally, writes fail when it stops</span></li>
-<li class="ic-timer-sand"><span><b>Start-up:</b> 1.5 minutes with unlimited CPU credits, 6 minutes with standard credits</span></li>
+<li class="ic-speedometer"><span><b>CPU credits:</b> with none left, one instance served 433 requests per second instead of 1,438, and scaling never started</span></li>
+<li class="ic-database"><span><b>Database:</b> shared by every instance; its CPU rose from 41% to 70% with two instances</span></li>
+<li class="ic-ticket-percent"><span><b>Coupon:</b> one instance on the write path; stopped, every write failed</span></li>
+<li class="ic-timer-sand"><span><b>Start-up:</b> about 2 minutes with unlimited credits, about 7 with standard credits</span></li>
 </ul>
 </div>
 
-<p class="caption">Above: the parts that stayed single. A single dependency is a risk; it is only a bottleneck where the data shows saturation.</p>
+<p class="caption">Above: what every Product instance depends on. A single dependency is a risk; it is only a bottleneck where the data shows saturation.</p>
 
 ---
 
-<p class="eyebrow">07 · Engineering judgement</p>
+<p class="eyebrow">08 · Engineering judgement</p>
 
-## Answer
-<!-- .slide: id="answer" data-note="8" -->
+## What do you see?
+<!-- .slide: id="answer" data-note="9" -->
+
+<p class="answer-big">The answer.</p>
 
 <div class="three answer">
-<div><h3 class="ic-chart-line">Scalability</h3><p>Product CPU halved and server p95 fell 36-55%, but the client saw no gain: my laptop was the limit</p></div>
-<div><h3 class="ic-shield-refresh">Resilience</h3><p>Survived losing an instance after about 30 s of errors; full capacity back after 7 min</p></div>
-<div><h3 class="ic-lightbulb-on-outline">Next improvement</h3><p>Three tiers across two zones: private subnets, Multi-AZ RDS<a class="ref" href="#/references"><sup>4</sup></a>, Coupon in each zone, min 2 Product from a pre-baked image; then run k6 inside AWS</p></div>
+<div><h3 class="ic-chart-line">Scalability</h3><p>With unlimited credits, two instances served 1.7 times as many requests and p95 fell 41%. With credits used up, CPU was capped and scaling never started</p></div>
+<div><h3 class="ic-shield-refresh">Resilience</h3><p>Losing an instance cost 1.3% of requests; a database failover cost one write. A stopped Coupon broke every write</p></div>
+<div><h3 class="ic-lightbulb-on-outline">Next improvement</h3><p>Minimum 2 Product from a pre-built image, unlimited credits, Coupon in each zone, a paged product list; then run k6 inside AWS</p></div>
 </div>
 
-<p class="caption">The cost: about USD 32-35 a month for each NAT gateway<a class="ref" href="#/references"><sup>5</sup></a>, and more to configure. Details: <a href="../report.md#54-one-next-improvement-a-three-tier-design-across-two-availability-zones">report, section 5.4</a></p>
+<figure class="answer-meme"><img src="src/img/memes/the-answer-x-men-apocalypse-2016-imdb-tt3385516-time-01-10-18.png" alt="Film still from X-Men: Apocalypse (2016), subtitle: The answer." />
+<figcaption class="fig-caption"><a class="ref media" href="#/figures"><sup>8</sup></a> – X-Men: Apocalypse (2016)</figcaption></figure>
+
+<p class="caption">Already built: private subnets and a Multi-AZ database, at about USD 32-35 a month for each NAT gateway<a class="ref" href="#/references"><sup>5</sup></a>. Details: <a href="../report.md#54-one-next-improvement-complete-the-target-design">report, section 5.4</a></p>
 
 ---
 
 ## Thanks for coming to my TED Talk
 <!-- no-number -->
-<!-- .slide: id="finish" class="finish-slide" data-note="9" -->
+<!-- .slide: id="finish" class="finish-slide" data-note="10" -->
 
 ### <span class="finish-emoji" aria-hidden="true">🎤</span>Questions? <span class="mail-icon" aria-hidden="true"></span>Email me
 <!-- .element: class="finish-questions" -->
@@ -324,13 +379,14 @@ flowchart LR
 <!-- .slide: id="figures" -->
 
 <ol class="reflist media-list">
-<li data-m="1"><a href="#/design">The architecture as tested</a></li>
-<li data-m="2"><a href="#/console">The load balancer's target group on the AWS console</a></li>
-<li data-m="3"><a href="#/one-vs-two">One versus two Product instances: requests per second and client p95 against users</a></li>
-<li data-m="4"><a href="#/elasticity">Elasticity: the events in order</a></li>
-<li data-m="5"><a href="#/elasticity-cloudwatch">Elasticity: Product CPU, response time, capacity and RDS CPU</a></li>
-<li data-m="6"><a href="#/failure">Failure: client requests per second, failed requests and p95</a></li>
-<li data-m="7"><a href="#/failure-events">Failure: the events in order</a></li>
+<li data-m="1"><a href="#/design">The architecture as built: three tiers across two zones</a></li>
+<li data-m="2"><a href="#/console">The load balancer's target group on the AWS console (set 0)</a></li>
+<li data-m="3"><a href="#/one-vs-two">One versus two Product instances, sets 0 and B: requests per second and client p95 against users</a></li>
+<li data-m="4"><a href="#/elasticity-events">Elasticity, set 0: the events in order</a></li>
+<li data-m="5"><a href="#/elasticity-cloudwatch">Elasticity, set 0: Product CPU, response time, capacity and RDS CPU</a></li>
+<li data-m="6"><a href="#/failure">Failure, set 0: client requests per second, failed requests and p95</a></li>
+<li data-m="7"><a href="#/failure-events">Failure, set 0: the events in order</a></li>
+<li data-m="8"><a href="#/answer">X-Men: Apocalypse (2016), film still</a></li>
 </ol>
 
 <p class="caption">The charts are drawn in the browser from <a href="data/ca1-charts.json">ca1-charts.json</a>, made by <a href="../../scripts/ca1_chart_data.py">ca1_chart_data.py</a> from the saved data in <a class="folder" href="../../test-results/">test-results</a>. The data behind each figure: <a href="#/data">Data sets</a>; the notebook <a href="../../data/notebooks/make_charts.ipynb">make_charts.ipynb</a> shows the numbers and draws the report's charts.</p>
@@ -344,8 +400,8 @@ flowchart LR
 <table class="data-sets no-link-icon">
 <thead><tr><th>Dataset</th><th>File</th><th>Description</th><th class="num">Data rows</th><th>Figure</th><th><span class="sr-only">View</span></th><th><span class="sr-only">Download</span></th></tr></thead>
 <tbody>
-<tr data-set="one-vs-two"><td class="set-no">1</td><td><span class="csv-name">one-vs-two.csv</span></td><td class="set-desc">One Product instance versus two: requests per second and client p95 by users</td><td class="num">12</td><td><a class="fig-link" href="#/one-vs-two">3</a></td><td class="view"><a class="md-view" href="../../data/markdown/one-vs-two.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/one-vs-two.csv" download>Download</a></td></tr>
-<tr data-set="elasticity-events"><td class="set-no">2</td><td><span class="csv-name">elasticity-events.csv</span></td><td class="set-desc">Elasticity: the events in order</td><td class="num">6</td><td><a class="fig-link" href="#/elasticity">4</a></td><td class="view"><a class="md-view" href="../../data/markdown/elasticity-events.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/elasticity-events.csv" download>Download</a></td></tr>
+<tr data-set="one-vs-two"><td class="set-no">1</td><td><span class="csv-name">one-vs-two.csv</span></td><td class="set-desc">One Product instance versus two, sets 0 and B: requests per second and client p95 by users</td><td class="num">24</td><td><a class="fig-link" href="#/one-vs-two">3</a></td><td class="view"><a class="md-view" href="../../data/markdown/one-vs-two.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/one-vs-two.csv" download>Download</a></td></tr>
+<tr data-set="elasticity-events"><td class="set-no">2</td><td><span class="csv-name">elasticity-events.csv</span></td><td class="set-desc">Elasticity: the events in order</td><td class="num">6</td><td><a class="fig-link" href="#/elasticity-events">4</a></td><td class="view"><a class="md-view" href="../../data/markdown/elasticity-events.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/elasticity-events.csv" download>Download</a></td></tr>
 <tr data-set="elasticity-cloudwatch"><td class="set-no">3</td><td><span class="csv-name">elasticity-cloudwatch.csv</span></td><td class="set-desc">Elasticity: CloudWatch, 1-minute points</td><td class="num">134</td><td><a class="fig-link" href="#/elasticity-cloudwatch">5</a></td><td class="view"><a class="md-view" href="../../data/markdown/elasticity-cloudwatch.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/elasticity-cloudwatch.csv" download>Download</a></td></tr>
 <tr data-set="failure-client-5s"><td class="set-no">4</td><td><span class="csv-name">failure-client-5s.csv</span></td><td class="set-desc">Failure: k6 requests in 5-second windows</td><td class="num">72</td><td><a class="fig-link" href="#/failure">6</a></td><td class="view"><a class="md-view" href="../../data/markdown/failure-client-5s.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/failure-client-5s.csv" download>Download</a></td></tr>
 <tr data-set="failure-events"><td class="set-no">5</td><td><span class="csv-name">failure-events.csv</span></td><td class="set-desc">Failure: the events in order</td><td class="num">6</td><td><a class="fig-link" href="#/failure-events">7</a></td><td class="view"><a class="md-view" href="../../data/markdown/failure-events.md">View</a></td><td class="download"><a class="csv-download" href="../../data/csv/failure-events.csv" download>Download</a></td></tr>

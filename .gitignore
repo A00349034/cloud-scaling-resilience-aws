@@ -538,3 +538,8 @@ $RECYCLE.BIN/
 *.env
 !*.env.example
 
+
+# Over GitHub's 100 MB limit: kept in Git as a split zip (.zip.001, .zip.002).
+# Extract with 7-Zip or scripts/join-large-file.ps1; the extracted file stays local.
+test-results/20261111-201208-fcB-elasticity-1to2-cpu30-200users/samples.json.gz
+test-results/20261111-201208-fcB-elasticity-1to2-cpu30-200users/samples.json

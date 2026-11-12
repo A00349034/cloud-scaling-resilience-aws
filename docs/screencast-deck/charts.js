@@ -86,7 +86,7 @@
         o.yAxis = [valueAxis("Requests per second", 0), valueAxis("Client p95 response time (ms)", 1, { nameGap: 52 })];
         o.series = names.flatMap((name, k) => ["rps", "p95"].map((key, i) => ({
             name, type: "line", xAxisIndex: i, yAxisIndex: i, data: d[name].map(r => r[key]),
-            color: C.series[k], symbolSize: 10, lineStyle: { width: 3 }
+            color: C.series[k], symbolSize: 10, lineStyle: { width: 3, type: name.startsWith("Set 0") ? "dashed" : "solid" }
         })));
         delete o.toolbox.feature.dataZoom;
         return o;

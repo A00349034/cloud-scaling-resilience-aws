@@ -1,0 +1,19 @@
+{
+	// Serves the repository on http://localhost:8011 so the slides can fetch slides.md.
+	// Stop it with the bin icon in the terminal panel (or Ctrl+C).
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Slides: serve",
+			"type": "shell",
+			"command": "python -u -m http.server 8012 --bind 127.0.0.1",
+			"options": { "cwd": "${workspaceFolder}" },
+			"isBackground": true,
+			"problemMatcher": {
+				"owner": "slides",
+				"pattern": { "regexp": "^__never__$" },
+				"background": { "activatesOnStart": true, "beginsPattern": ".", "endsPattern": "Serving HTTP" }
+			}
+		}
+	]
+}
